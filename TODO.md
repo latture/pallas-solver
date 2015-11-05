@@ -1,0 +1,3 @@
+- DifferentialEvolution::_mutate, disallow mutations with current individual
+- Add support for penalty constrained functions
+- Remove Ceres::scoped_ptr in favor of C++11 smart pointers

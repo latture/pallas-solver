@@ -1,0 +1,289 @@
+// Pallas Solver
+// Copyright 2015. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// * Redistributions of source code must retain the above copyright notice,
+//   this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+//
+// Author: ryan.latture@gmail.com (Ryan Latture)s
+
+#include "pallas/simulated_annealing.h"
+#include "pallas/internal/solver_utils.h"
+#include "pallas/internal/stringprintf.h"
+#include "pallas/internal/wall_time.h"
+
+namespace pallas {
+
+    using std::string;
+
+    using ceres::TerminationTypeToString;
+
+    using pallas::internal::StringAppendF;
+    using pallas::internal::StringPrintf;
+    using pallas::internal::WallTimeInSeconds;
+
+    namespace {
+
+        bool Evaluate(const GradientProblem &problem,
+                      Vector &x,
+                      internal::State *state,
+                      std::string *message) {
+            if (!problem.Evaluate(x.data(),
+                                  &(state->cost),
+                                  state->gradient.data())) {
+                *message = "Problem evaluation failed";
+                return false;
+            }
+            return true;
+        }
+
+    } // namespace
+
+    SimulatedAnnealing::Summary::Summary()
+            : termination_type(TerminationType::FAILURE),
+              message("pallas::SimulatedAnnealing was not called."),
+              initial_cost(-1.0),
+              final_cost(-1.0),
+              num_parameters(0),
+              num_iterations(0),
+              total_time_in_seconds(0.0),
+              local_minimization_time_in_seconds(0.0),
+              step_time_in_seconds(0.0),
+              cost_evaluation_time_in_seconds(0.0),
+              was_polished(false){
+
+    };
+
+    std::string SimulatedAnnealing::Summary::BriefReport() const {
+        return StringPrintf(
+                "Pallas simulated annealing report: "
+                        "iterations: %d, "
+                        "initial cost: %e, "
+                        "final cost: %e, "
+                        "termination: %s\n",
+                num_iterations,
+                initial_cost,
+                final_cost,
+                TerminationTypeToString(termination_type));
+    };
+
+    string SimulatedAnnealing::Summary::FullReport() const {
+
+        string report = string("\nSolver Summary\n\n");
+
+        StringAppendF(&report, "Parameters          %27d\n", num_parameters);
+
+        string cooling_schedule_string = CoolingScheduleTypeToString(cooling_schedule);
+
+        StringAppendF(&report, "Cooling schedule     %26s\n",
+                      cooling_schedule_string.c_str());
+
+        StringAppendF(&report, "\n");
+
+        StringAppendF(&report, "\nCost:\n");
+        StringAppendF(&report, "Initial        %30e\n", initial_cost);
+        if (termination_type != TerminationType::FAILURE &&
+            termination_type != TerminationType::USER_FAILURE) {
+            StringAppendF(&report, "Final          %30e\n", final_cost);
+            StringAppendF(&report, "Change         %30e\n",
+                          initial_cost - final_cost);
+        }
+
+        StringAppendF(&report, "\nMinimizer iterations         %16d\n",
+                      num_iterations);
+
+        StringAppendF(&report, "\nTime (in seconds):\n");
+
+        StringAppendF(&report, "\n  Cost evaluation     %23.4f\n",
+                      cost_evaluation_time_in_seconds);
+
+        if (was_polished) {
+            StringAppendF(&report, "  Local minimization   %22.4f\n",
+                          local_minimization_time_in_seconds);
+        }
+
+        StringAppendF(&report, "  Step function   %27.4f\n",
+                      step_time_in_seconds);
+
+        StringAppendF(&report, "Total               %25.4f\n\n",
+                      total_time_in_seconds);
+
+        StringAppendF(&report, "Termination:        %25s (%s)\n",
+                      TerminationTypeToString(termination_type), message.c_str());
+        return report;
+    };
+
+    void SimulatedAnnealing::Solve(const SimulatedAnnealing::Options& options,
+               const GradientProblem& problem,
+               double* parameters,
+               SimulatedAnnealing::Summary* global_summary) {
+
+        double start_time = WallTimeInSeconds();
+        double t1;
+        unsigned int dwell_iter;
+        num_iterations = 0;
+        num_stagnant_iterations = 0;
+
+        bool is_not_silent = !options.is_silent;
+
+        const unsigned int num_parameters = static_cast<unsigned int>(problem.NumParameters());
+
+        global_summary->cooling_schedule = options.cooling_schedule_options.type;
+        global_summary->num_parameters = num_parameters;
+
+        VectorRef x(parameters, num_parameters);
+
+        current_state = internal::State(num_parameters);
+        current_state.x = x;
+
+        t1 = WallTimeInSeconds();
+        if (!Evaluate(problem, current_state.x, &current_state, &global_summary->message)) {
+            global_summary->termination_type = TerminationType::FAILURE;
+            global_summary->message = "Initial cost and jacobian evaluation failed. "
+                                              "More details: " + global_summary->message;
+            LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+        }
+        ++num_iterations;
+        global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
+
+        global_summary->initial_cost = current_state.cost;
+
+        scoped_ptr<CoolingSchedule> __cooling_schedule(
+                CoolingSchedule::Create(options.cooling_schedule_options));
+
+        swap(cooling_schedule, __cooling_schedule);
+
+        if(cooling_schedule->get_initial_temperature() < 0.0) {
+            cooling_schedule->calc_start_temperature(problem, current_state, options.step_function.get());
+        }
+
+        candidate_state = current_state;
+        global_minimum_state = current_state;
+
+        GradientLocalMinimizer::Summary local_summary;
+
+        if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
+            prepare_final_summary_(global_summary, local_summary);
+        }
+
+        // main loop
+        while (true) {
+            for(dwell_iter = 0; dwell_iter < options.dwell_iterations; ++dwell_iter) {
+                t1 = WallTimeInSeconds();
+                options.step_function->Step(candidate_state.x.data(), num_parameters);
+                global_summary->step_time_in_seconds += WallTimeInSeconds() - t1;
+
+                t1 = WallTimeInSeconds();
+                if (!Evaluate(problem, candidate_state.x, &candidate_state, &global_summary->message)) {
+                    global_summary->termination_type = TerminationType::FAILURE;
+                    global_summary->message = "Cost evaluation of candidate state failed "
+                                                      "More details: " + global_summary->message;
+                    LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+                }
+                global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
+
+                if (metropolis(candidate_state.cost, current_state.cost)) {
+                    current_state = candidate_state;
+                    if (global_minimum_state.update(current_state)) {
+                        num_stagnant_iterations = 0;
+                    } else {
+                        ++num_stagnant_iterations;
+                    }
+                }
+            }
+
+            cooling_schedule->update_temperature();
+            ++num_iterations;
+
+            if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
+                t1 = WallTimeInSeconds();
+
+                if (options.polish_output) {
+                    GradientLocalMinimizer local_minimizer;
+                    local_minimizer.Solve(options.local_minimizer_options,
+                                          problem,
+                                          global_minimum_state.x.data(),
+                                          &local_summary);
+                    global_summary->was_polished = true;
+                }
+                global_summary->local_minimization_time_in_seconds = WallTimeInSeconds() - t1;
+
+                t1 = WallTimeInSeconds();
+                if (!Evaluate(problem, global_minimum_state.x, &global_minimum_state, &global_summary->message)) {
+                    global_summary->termination_type = TerminationType::FAILURE;
+                    global_summary->message = "Cost evaluation of global mininum state failed after polishing step "
+                                                      "More details: " + global_summary->message;
+                    LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+                }
+                global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
+                global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
+                prepare_final_summary_(global_summary, local_summary);
+                if (internal::IsSolutionUsable(global_summary)||internal::IsSolutionUsable(local_summary)) {
+                    x = global_minimum_state.x;
+                }
+                break;
+            }
+        }
+    };
+
+    bool SimulatedAnnealing::check_for_termination_(const SimulatedAnnealing::Options& options,
+                                std::string *message,
+                                TerminationType * termination_type) {
+
+        if (global_minimum_state.cost < options.minimum_cost) {
+            *message = "Prescribed minimum cost reached.";
+            *termination_type = TerminationType::USER_SUCCESS;
+            return true;
+        } else if (num_iterations >= options.max_iterations) {
+            *message = "Maximum number of iterations reached.";
+            *termination_type = TerminationType::NO_CONVERGENCE;
+            return true;
+        } else if (num_stagnant_iterations >= options.max_stagnant_iterations) {
+            *message = "Maximum number of stagnant iterations reached.";
+            *termination_type = TerminationType::CONVERGENCE;
+            return true;
+        } else if (cooling_schedule->get_temperature() < options.cooling_schedule_options.final_temperature) {
+            *message = "Minimum temperature reached reached.";
+            if (std::abs(current_state.cost - global_minimum_state.cost) > 1.0e-8) {
+                *message += " WARNING: Cooled to final state, but this was not the smallest configuration found.";
+                *termination_type = TerminationType::NO_CONVERGENCE;
+            } else {
+                *termination_type = TerminationType::CONVERGENCE;
+            }
+            return true;
+        }
+        return false;
+    };
+
+    void SimulatedAnnealing::prepare_final_summary_(SimulatedAnnealing::Summary *global_summary,
+                                const GradientLocalMinimizer::Summary &local_summary) {
+        global_summary->final_cost = global_minimum_state.cost;
+        global_summary->num_iterations = num_iterations;
+        global_summary->local_minimization_summary = local_summary;
+    };
+
+    void Solve(const SimulatedAnnealing::Options& options,
+               const GradientProblem& problem,
+               double* parameters,
+               SimulatedAnnealing::Summary* summary) {
+        SimulatedAnnealing solver;
+        solver.Solve(options, problem, parameters, summary);
+    }
+} // namespace pallas
