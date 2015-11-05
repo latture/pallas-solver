@@ -2,7 +2,7 @@
  *
  * \section intro_sec Introduction
  *
- * This project is a suite of global optimization algorithms for C++ inspired by SciPy's global optimization package. 
+ * This project is a suite of global optimization algorithms for C++ inspired by SciPy's global optimization package.
  * Currently supported functions are basinhopping, brute, differential evolution, and simulated annealing.
  *
  * * pallas::Basinhopping
@@ -16,11 +16,11 @@
  * \subsection dependency_sec Dependencies
  *
  * * C++11 compatible compiler
- * * <a href="https://github.com/google/glog">glog</a> 
+ * * <a href="https://github.com/google/glog">glog</a>
  * * <a href="http://ceres-solver.org/">Ceres</a>
  * * <a href="https://cmake.org">CMake</a>
  *
- * \subsection Building and Installation
+ * \subsection build_install_sec Building and Installation
  *
  * To use this library first install glog and CMake. Pallas is based off of the Google Ceres project which has extensive
  * use of glog for logging and debugging features, and this functionality is carried over into Pallas. Follow the
@@ -120,11 +120,11 @@ int main(int argc, char** argv) {
  * @endcode
  *
  * If the global optimizer employs a local minimizer, the options for the local minimizer
- * are accessed through the `options.local_minimizer_options` minimizer variable. 
+ * are accessed through the `options.local_minimizer_options` minimizer variable.
  * `options.local_minimizer_options` is itself a struct containing the parameters
  * to augment the functionality of the local minimization step(s). The local minimization
  * options are from the `ceres::GradientProblemSolver` renamed to `pallas::GradientLocalMinimizer`
- * to avoid confusion between the global and local solvers. If `DifferentialEvolution` is 
+ * to avoid confusion between the global and local solvers. If `DifferentialEvolution` is
  * being used as the global optimizer, the `options` struct requires that upper and lower
  * bounds be set for the current problem. Note, however, that if the final output is polished
  * (`options.polish = true`) the local optimization will not respect the bounds of the global
@@ -144,14 +144,14 @@ int main(int argc, char** argv) {
  * // inherit from StepFunction and implement Step method
  * class CustomStepFunction : public pallas::StepFunction {
  * public:
- *     CustomStepFunction(double step_size) 
+ *     CustomStepFunction(double step_size)
  *         : random_number_(new pallas::internal::RandomNumberGenerator<double>(-step_size, step_size)) {
  *     };
- *  
+ *
  *     void Step(double* x, unsigned int num_parameters) {
  *         // implementation to modify x in place
  *     };
- *  
+ *
  *      private:
  *          scoped_ptr<pallas::internal::RandomNumberGenerator<double>> random_number_;
  *      };
@@ -165,8 +165,8 @@ int main(int argc, char** argv) {
  * // use convenience method to replace default step function
  * options.set_step_function(step);
  * @endcode
- * 
- * 
+ *
+ *
  * Subclassing `pallas::GradientCostFunction`
  * and implementing the `Evaluate` and `NumParameters` methods defines your objective function.
  * Create a `GradientProblem` using:
@@ -187,7 +187,7 @@ int main(int argc, char** argv) {
  *
  * This is then passed as the final parameter to the solver. There are 2 methods optimize a
  * cost function. An instance of the solver can be created then optimized using the `global_optimizer.Solve`
- * method. There is also a `pallas::Solve` function added for convenience. It is overloaded 
+ * method. There is also a `pallas::Solve` function added for convenience. It is overloaded
  * to create a global optimizer instance and run the optimization based on the parameters
  * passed to the function. To summarize, the two method of optimization are given by:
  *
@@ -203,7 +203,7 @@ int main(int argc, char** argv) {
  *
  *\subsection Credits
  * This libary uses the local minimization algorithms from Google's Ceres solver.
- * Implementations of the global optimization algorithms are based on Scipy's 
+ * Implementations of the global optimization algorithms are based on Scipy's
  * optimize package. Because of the similarities between the Pallas algorithms
  * and scipy.optimize, much of the documentation was taken from their source.
  *
