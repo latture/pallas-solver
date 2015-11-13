@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['pallas_20index_20page',['Pallas Index Page',['../index.html',1,'']]],
-  ['pallas_20solver',['Pallas Solver',['../md__r_e_a_d_m_e.html',1,'']]],
   ['parameterrange',['ParameterRange',['../structpallas_1_1_brute_1_1_parameter_range.html',1,'pallas::Brute']]],
   ['parameterrange',['ParameterRange',['../structpallas_1_1_brute_1_1_parameter_range.html#a19689e3e90b4d904a10bd04f09c61e8d',1,'pallas::Brute::ParameterRange::ParameterRange()'],['../structpallas_1_1_brute_1_1_parameter_range.html#a597e6c16512979b521953db71a4f5ef8',1,'pallas::Brute::ParameterRange::ParameterRange(double start, double stop, int size)']]],
   ['penaltyconstrainedfunction',['PenaltyConstrainedFunction',['../classpallas_1_1_penalty_constrained_function.html',1,'pallas']]],

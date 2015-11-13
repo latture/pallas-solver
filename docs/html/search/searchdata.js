@@ -7,7 +7,7 @@ var indexSectionsWithContent =
   4: "bcdfilmnpstuw",
   5: "e",
   6: "m",
-  7: "pt"
+  7: "t"
 };
 
 var indexSectionNames =

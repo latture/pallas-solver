@@ -2,7 +2,17 @@ Pallas Solver
 =============
 
 This project is a suite of global optimization algorithms for C++ inspired by SciPy's global optimization package.
-Currently supported functions are basinhopping, brute, differential evolution, and simulated annealing.
+Currently supported functions are:
+
+  * pallas::Basinhopping
+  * pallas::Brute
+  * pallas::DifferentialEvolution
+  * pallas::SimulatedAnnealing
+
+
+<!-- For more information on the options for each optimizer please navigate to the
+documentation for each algorithm by clicking on the function above. -->
+For more information on the options for each algorithm please see the documentation at: http://latture.github.io/pallas-solver
 
 Dependencies
 ------------
@@ -97,7 +107,7 @@ int main(int argc, char** argv) {
 
 After compiling and running, the console should display the following:
 
-```
+```txt
 Solver Summary
 
 Parameters                                  2
@@ -121,8 +131,116 @@ Termination: CONVERGENCE (Maximum number of stagnant iterations reached.)
 Global minimum found at:
 	x: 1	y: 1
 ```
+
 This example (among others) can be found in the examples folder.
-For more information please see the documentation at: http://latture.github.io/pallas-solver
+
+Getting started
+---------------
+Pallas global optimization algorithms take as inputs an `Options` struct class specific
+to each optimizer, `GradientProblem` which encapsulates the objective function to optimize,
+a `const double*` pointing to the initial starting point for optimization
+(except for Brute which takes a range of parameters), and a summary in which details of the
+optimization are stored. The `Options` struct is a subclass specific to each optimizer
+exposing the options that can be changed in order to customize the optimization procedure.
+If Basinhopping is being used as the global optimizer, creating an instance of the default
+options is as simple as:
+
+```cpp
+pallas::Basinhopping::Options options;
+```
+
+The default options can be changed by accessing member variables:
+
+```cpp
+options.maxiterations = 1000;
+```
+
+If the global optimizer employs a local minimizer, the options for the local minimizer
+are accessed through the `options.local_minimizer_options` minimizer variable.
+`options.local_minimizer_options` is itself a struct containing the parameters
+to augment the functionality of the local minimization step(s). The local minimization
+options are from the `ceres::GradientProblemSolver` renamed to `pallas::GradientLocalMinimizer`
+to avoid confusion between the global and local solvers. If `DifferentialEvolution` is
+being used as the global optimizer, the `options` struct requires that upper and lower
+bounds be set for the current problem. Note, however, that if the final output is polished
+(`options.polish = true`) the local optimization will not respect the bounds of the global
+optimization due to the restriction of the Ceres local optimization algorithms to purely
+unbounded problems. Both the `SimulatedAnnealing` and `Basinhopping` algorithms use
+the `StepFunction` class to generate randomized candidate solutions. A pallas::scoped_ptr
+to a `DefaultStepFunction` is created by default. This is not going to give optimal results
+for your problem. If either of these algorithms are being used a class should inherit from
+`StepFunction` and implement the `Step` method which takes as inputs a pointer to the
+current solution and the number of parameters, then modifies the current solution in
+place. If a `StepFunction` is used by the global optimizer, then the options struct
+has a helper method `set_step_function` that swaps the pointer to the default step
+function with the user defined functor. The following shows how to create a step
+functor and replace it as the step function pointer in the options struct:
+
+```cpp
+// inherit from StepFunction and implement Step method
+class CustomStepFunction : public pallas::StepFunction {
+public:
+    CustomStepFunction(double step_size)
+        : random_number_(new pallas::internal::RandomNumberGenerator<double>(-step_size, step_size)) {
+    };
+
+    void Step(doublex, unsigned int num_parameters) {
+        // implementation to modify x in place
+    };
+
+     private:
+         scoped_ptr<pallas::internal::RandomNumberGenerator<double>> random_number_;
+     };
+
+// create the options for the solver
+pallas::Basinhopping::Options options;
+
+// instantiate scoped pointer to StepFunction
+pallas::scoped_ptr< CustomStepFunction > step(new CustomStepFunction(1.0));
+
+// use convenience method to replace default step function
+options.set_step_function(step);
+```
+
+Subclassing `pallas::GradientCostFunction`
+and implementing the `Evaluate` and `NumParameters` methods defines your objective function.
+Create a `GradientProblem` using:
+
+```cpp
+pallas::GradientProblem problem(new YourObjectiveFuntion());
+```
+
+The gradient problem is what is then passed to the solver. The `parameters` for the global
+optimization represents an initial guess required for the `Basinhopping` and `SimulatedAnnealing`
+algorithms. It should be a `double*` and contain the same number of values as the `NumParameters`
+method returns. Each global optimizer contains a `Summary` class used to store the results of
+the global optimization. The summary is created in the same manner as the options struct, i.e.:
+
+```cpp
+pallas::Basinhopping::Summary summary;
+```
+
+This is then passed as the final parameter to the solver. There are 2 methods optimize a
+cost function. An instance of the solver can be created then optimized using the `global_optimizer.Solve`
+method. There is also a `pallas::Solve` function added for convenience. It is overloaded
+to create a global optimizer instance and run the optimization based on the parameters
+passed to the function. To summarize, the two method of optimization are given by:
+
+```cpp
+// create an instance of a global optimizer
+pallas::Basinhopping bh;
+bh.Solve(options, problem, parameters, &summary);
+
+// bypass the creation of the optimizer
+pallas::Solve(options, problem, parameters, &summary)
+```
+
+Credits
+-------
+This libary uses the local minimization algorithms from Google's Ceres solver.
+Implementations of the global optimization algorithms are based on Scipy's
+optimize package. Because of the similarities between the Pallas algorithms
+and scipy.optimize, much of the documentation was taken from their source.
 
 Contributor(s)
 ------------
