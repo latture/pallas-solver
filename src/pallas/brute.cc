@@ -83,16 +83,16 @@ namespace pallas {
 
         string report = string("\nSolver Summary\n\n");
 
-        StringAppendF(&report, "Parameters          %27d\n", num_parameters);
+        StringAppendF(&report, "Parameters          %25d\n", num_parameters);
 
         StringAppendF(&report, "\n");
 
         if (termination_type != TerminationType::FAILURE &&
             termination_type != TerminationType::USER_FAILURE) {
-            StringAppendF(&report, "Final cost          %30e\n", final_cost);
+            StringAppendF(&report, "Final cost          %25e\n", final_cost);
         }
 
-        StringAppendF(&report, "\nTotal iterations         %16d\n",
+        StringAppendF(&report, "\nTotal iterations         %20d\n",
                       num_iterations);
 
         StringAppendF(&report, "\nTime (in seconds):\n");
@@ -108,10 +108,10 @@ namespace pallas {
                           local_minimization_time_in_seconds);
         }
 
-        StringAppendF(&report, "Total               %25.4f\n\n",
+        StringAppendF(&report, "  Total               %23.4f\n\n",
                       total_time_in_seconds);
 
-        StringAppendF(&report, "Termination:        %25s (%s)\n",
+        StringAppendF(&report, "Termination: %2s (%s)\n",
                       TerminationTypeToString(termination_type), message.c_str());
         return report;
     };
