@@ -91,6 +91,33 @@ int main(int argc, char** argv) {
     }
 ```
 
+After compiling and running, the console should display the following:
+
+```
+Solver Summary
+
+Parameters                                  2
+Line search direction                   LBFGS
+
+Cost:
+  Initial                        2.122000e+02
+  Final                          3.300841e-27
+  Change                         2.122000e+02
+
+Minimizer iterations                       21
+
+Time (in seconds):
+  Cost evaluation                      0.0000
+  Local minimization                   0.0015
+  Step function                        0.0000
+  Total                                0.0015
+
+Termination: CONVERGENCE (Maximum number of stagnant iterations reached.)
+
+Global minimum found at:
+	x: 1	y: 1
+```
+This example (among others) can be found in the examples folder.
 For more information please see the documentation at: http://latture.github.io/pallas-solver
 
 Contributor(s)
