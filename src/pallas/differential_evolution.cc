@@ -43,7 +43,7 @@ namespace pallas {
 
 
     namespace {
-    
+
         bool Evaluate(const GradientProblem &problem,
                       Vector &x,
                       double *cost,
@@ -86,19 +86,16 @@ namespace pallas {
 
         string report = string("\nSolver Summary\n\n");
 
-        StringAppendF(&report, "Parameters          %27d\n", num_parameters);
+        StringAppendF(&report, "Parameters          %25d\n", num_parameters);
 
         string mutation_strategy_string = MutationStrategyTypeToString(mutation_strategy);
 
-        StringAppendF(&report, "Mutation strategy     %26s\n",
+        StringAppendF(&report, "Mutation strategy     %23s\n",
                       mutation_strategy_string.c_str());
-
-        StringAppendF(&report, "\n");
 
         if (termination_type != TerminationType::FAILURE &&
             termination_type != TerminationType::USER_FAILURE) {
-            StringAppendF(&report, "\nCost:\n");
-            StringAppendF(&report, "Final          %30e\n", final_cost);
+            StringAppendF(&report, "\nFinal cost          %25e\n", final_cost);
         }
 
         StringAppendF(&report, "\nMinimizer iterations         %16d\n",
@@ -106,7 +103,7 @@ namespace pallas {
 
         StringAppendF(&report, "\nTime (in seconds):\n");
 
-        StringAppendF(&report, "\n  Cost evaluation     %23.4f\n",
+        StringAppendF(&report, "  Cost evaluation     %23.4f\n",
                       cost_evaluation_time_in_seconds);
 
         if (was_polished) {
@@ -114,10 +111,10 @@ namespace pallas {
                           local_minimization_time_in_seconds);
         }
 
-        StringAppendF(&report, "Total               %25.4f\n\n",
+        StringAppendF(&report, "  Total               %23.4f\n\n",
                       total_time_in_seconds);
 
-        StringAppendF(&report, "Termination:        %25s (%s)\n",
+        StringAppendF(&report, "Termination: %2s (%s)\n",
                       TerminationTypeToString(termination_type), message.c_str());
         return report;
     };
