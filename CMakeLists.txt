@@ -9,7 +9,7 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -fopenmp")
 set(CERES_DIR "/usr/local/share/Ceres")
-set(EIGEN_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen/")
+set(EIGEN_SUBDIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen/")
 set(GTEST_SUBDIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/googletest/googletest")
 set(FIND_GLOG_SUBDIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_MODULE_PATH "${FIND_GLOG_SUBDIR};${CMAKE_MODULE_PATH}")
@@ -21,7 +21,7 @@ macro(check_dir_exists NAME)
 endmacro()
 
 check_dir_exists(${CERES_DIR})
-check_dir_exists(${EIGEN_INCLUDE_DIR})
+check_dir_exists(${EIGEN_SUBDIR})
 check_dir_exists(${GTEST_SUBDIR})
 check_dir_exists(${FIND_GLOG_SUBDIR})
 
@@ -32,7 +32,7 @@ include_directories(APPEND
                     ${CMAKE_CURRENT_SOURCE_DIR}/include/
                     ${CMAKE_CURRENT_SOURCE_DIR}/src/
                     ${CERES_INCLUDE_DIRS}
-                    ${EIGEN_DIR}
+                    ${EIGEN_SUBDIR}
                     ${GTEST_SUBDIR}
                     ${GLOG_INCLUDE_DIR})
 
