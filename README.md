@@ -29,6 +29,10 @@ This should build Pallas. The folder `build/lib` will hold the library
 
 Example
 -------
+The Rosenbrock function (shown below) is a commonly used benchmarking function for optimization algorithms.
+The global minimum is in the middle of a narrow valley at `f(x, y) = 0` when `x = y = 1`.
+Finding the valley is fairly easy; however, finding the global minimum is quite a bit harder...
+![Rosenbrock](assets/Rosenbrock.png)
 
 ```cpp
 #include "glog/logging.h"
