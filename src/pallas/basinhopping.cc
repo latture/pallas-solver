@@ -101,21 +101,19 @@ namespace pallas {
 
         string report = string("\nSolver Summary\n\n");
 
-        StringAppendF(&report, "Parameters          %27d\n", num_parameters);
+        StringAppendF(&report, "Parameters          %25d\n", num_parameters);
 
         string line_search_direction_string = LineSearchDirectionTypeToString(line_search_direction_type);
 
         StringAppendF(&report, "Line search direction     %19s\n",
                       line_search_direction_string.c_str());
 
-        StringAppendF(&report, "\n");
-
         StringAppendF(&report, "\nCost:\n");
-        StringAppendF(&report, "Initial        %30e\n", initial_cost);
+        StringAppendF(&report, "  Initial        %28e\n", initial_cost);
         if (termination_type != TerminationType::FAILURE &&
             termination_type != TerminationType::USER_FAILURE) {
-            StringAppendF(&report, "Final          %30e\n", final_cost);
-            StringAppendF(&report, "Change         %30e\n",
+            StringAppendF(&report, "  Final          %28e\n", final_cost);
+            StringAppendF(&report, "  Change         %28e\n",
                           initial_cost - final_cost);
         }
 
@@ -124,7 +122,7 @@ namespace pallas {
 
         StringAppendF(&report, "\nTime (in seconds):\n");
 
-        StringAppendF(&report, "\n  Cost evaluation     %23.4f\n",
+        StringAppendF(&report, "  Cost evaluation     %23.4f\n",
                       cost_evaluation_time_in_seconds);
 
         StringAppendF(&report, "  Local minimization   %22.4f\n",
@@ -133,10 +131,10 @@ namespace pallas {
         StringAppendF(&report, "  Step function   %27.4f\n",
                       step_time_in_seconds);
 
-        StringAppendF(&report, "Total               %25.4f\n\n",
+        StringAppendF(&report, "  Total               %23.4f\n\n",
                       total_time_in_seconds);
 
-        StringAppendF(&report, "Termination:        %25s (%s)\n",
+        StringAppendF(&report, "Termination: %2s (%s)\n",
                       TerminationTypeToString(termination_type), message.c_str());
         return report;
     };
@@ -310,4 +308,3 @@ namespace pallas {
     }
 
 } // namespace pallas
-
