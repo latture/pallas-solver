@@ -189,7 +189,7 @@ public:
     };
 
      private:
-         scoped_ptr<pallas::internal::RandomNumberGenerator<double>> random_number_;
+         pallas::scoped_ptr<pallas::internal::RandomNumberGenerator<double>> random_number_;
      };
 
 // create the options for the solver
