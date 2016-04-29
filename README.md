@@ -241,7 +241,7 @@ Contributor(s)
 
 Credits
 -------
-This libary uses the local minimization algorithms from Google's Ceres solver.
+This library uses the local minimization algorithms from Google's Ceres solver.
 Implementations of the global optimization algorithms are based on Scipy's
 optimize package. Because of the similarities between the Pallas algorithms
-and scipy.optimize, much of the documentation was taken from their source.
+and scipy.optimize, much of the documentation was adapted from their source.
