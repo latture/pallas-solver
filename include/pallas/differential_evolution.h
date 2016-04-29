@@ -7,7 +7,7 @@
 * This file contains a C++ implementation of the differential algorithm due to Storn 
 * and Price: Differential Evolution - a Simple and Efficient Heuristic for Global Optimization over Continuous Spaces.
 * 
-* This code is based on the SciPy implementaion of differential evolution found in scipy.optimize and relies on 
+* This code is based on the SciPy implementation of differential evolution found in scipy.optimize and relies on
 * the local optimization algorithms in the Google Ceres project.
 */
 
@@ -154,7 +154,7 @@ namespace pallas {
             };
 
             /**
-             * Contains any changes to the default options for the local minimization algorthm. 
+             * Contains any changes to the default options for the local minimization algorithm.
              * See the documentation for ceres::GradientProblemSolver::Options for relevant options
              */
             GradientLocalMinimizer::Options local_minimizer_options;
@@ -227,7 +227,7 @@ namespace pallas {
             double tolerance;
 
             /**
-             * Whether the global minimum found through differential evolution should be subjected to a local minimzation "polishing" step before returning the result.
+             * Whether the global minimum found through differential evolution should be subjected to a local minimization "polishing" step before returning the result.
              */
             bool polish_output;
 
@@ -244,7 +244,7 @@ namespace pallas {
          */
         struct Summary{
             /**
-            * @brief Default constuctor
+            * @brief Default constructor
             */
             Summary();
 
@@ -364,7 +364,7 @@ namespace pallas {
          * @brief Update the fractional standard deviation of the population.
          * @details When the fraction standard deviation of the population falls below 
          * the tolerance specified in the DifferentialEvolution::Options variable
-         * optimization is teminated.
+         * optimization is terminated.
          */
         void update_std_dev_();
 
@@ -377,10 +377,10 @@ namespace pallas {
         void mutate_(Vector& candidate, unsigned int idx);
 
         /**
-         * @brief Checks to see if any temination conditions were met.
+         * @brief Checks to see if any termination conditions were met.
          * 
          * @param options pallas::DifferentialEvolution::Options. Options used to configure the optimization.
-         * @param message std::string*. If a termination condition is met, a message describing the satified condition is stored in the variable. 
+         * @param message std::string*. If a termination condition is met, a message describing the satisfied condition is stored in the variable.
          * @param termination_type pallas::TerminationType*. This
          * @return Returns `true` if a termination condition was meet, `false` otherwise. 
          */

@@ -100,7 +100,7 @@ namespace pallas {
 
     public:
         /**
-         * @brief Constuctor
+         * @brief Constructor
          * 
          * @param step_size double. Maximum magnitude a degree of freedom can be changed from its current position.
          * @param upper_bounds double*. Pointer to the upper bounds on the candidate's variables.

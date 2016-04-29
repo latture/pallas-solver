@@ -6,7 +6,7 @@
 *
 * This file contains a C++ implementation of the basinhopping algorithm.
 * This code relies on the Google Ceres local minimization functions, and
-* is inspired by the SciPy implementaion found in scipy.optimize
+* is inspired by the SciPy implementation found in scipy.optimize
 */
 
 // Pallas Solver
@@ -150,14 +150,14 @@ namespace pallas {
              * defined `StepFunction` with the scoped_ptr to the `StepFunction`
              * held within the `pallas::Basinhopping::Options` struct.
              * 
-             * @param user_step_function pallas::scoped_ptr<pallas::StepFunction>. This function generates radomized candidate solutions based on the current position. 
+             * @param user_step_function pallas::scoped_ptr<pallas::StepFunction>. This function generates randomized candidate solutions based on the current position.
              */
             void set_step_function(scoped_ptr<StepFunction>& user_step_function) {
                 swap(user_step_function, step_function);
             }
 
             /**
-             * Contains any changes to the default options for the local minimization algorthm. See the documentation for ceres::GradientProblemSolver::Options for relevant options
+             * Contains any changes to the default options for the local minimization algorithm. See the documentation for ceres::GradientProblemSolver::Options for relevant options
              */
             GradientLocalMinimizer::Options local_minimizer_options;
 
@@ -193,7 +193,7 @@ namespace pallas {
              */
         struct Summary {
             /**
-             * @brief Default constuctor
+             * @brief Default constructor
              */
             Summary();
             std::string BriefReport() const;/**<A brief one line description of the state of the solver after termination.*/
@@ -249,10 +249,10 @@ namespace pallas {
 
     private:
         /**
-         * @brief Checks to see if any temination conditions were met.
+         * @brief Checks to see if any termination conditions were met.
          * 
          * @param options pallas::Basinhopping::Options. Options used to configure the optimization.
-         * @param message std::string*. If a termination condition is met, a message describing the satified condition is stored in the variable. 
+         * @param message std::string*. If a termination condition is met, a message describing the satisfied condition is stored in the variable.
          * @param termination_type pallas::TerminationType*. This
          * @return Returns `true` if a termination condition was meet, `false` otherwise. 
          */

@@ -5,7 +5,7 @@
 * \date 5-18-15
 *
 * This file contains a C++ implementation of a cooling schedules used in the pallas::SimulatedAnnealing algorithm.
-* This code is based on the SciPy implementaion of simulated annealing found in scipy.optimize.
+* This code is based on the SciPy implementation of simulated annealing found in scipy.optimize.
 */
 
 // Pallas Solver
@@ -54,7 +54,7 @@ namespace pallas {
          */
         struct Options {
             /**
-             * @brief Default constuctor
+             * @brief Default constructor
              * @details Allows the type of cooling schedule and its respective parameters to be set as well as the initial temperature to start the simulation.
              */
             Options() {
@@ -199,7 +199,7 @@ namespace pallas {
     class BoltzmannCooling : public CoolingSchedule {
     public:
         /**
-         * Default constuctor
+         * Default constructor
          */
         BoltzmannCooling(const CoolingSchedule::Options& options);
 

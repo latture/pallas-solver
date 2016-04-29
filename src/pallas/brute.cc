@@ -63,7 +63,7 @@ namespace pallas {
               total_time_in_seconds(0.0),
               local_minimization_time_in_seconds(0.0),
               cost_evaluation_time_in_seconds(0.0),
-              permuation_build_time_in_seconds(0.0),
+              permutation_build_time_in_seconds(0.0),
               was_polished(false){
 
     };
@@ -98,7 +98,7 @@ namespace pallas {
         StringAppendF(&report, "\nTime (in seconds):\n");
 
         StringAppendF(&report, "  Calculate permutations     %16.4f",
-                      permuation_build_time_in_seconds);
+                      permutation_build_time_in_seconds);
 
         StringAppendF(&report, "\n  Cost evaluation     %23.4f\n",
                       cost_evaluation_time_in_seconds);
@@ -134,7 +134,7 @@ namespace pallas {
         std::vector<Vector> expanded_ranges = expand_parameter_ranges_(parameter_ranges);
 
         std::vector<Vector> permutations = build_permuations_(expanded_ranges);
-        global_summary->permuation_build_time_in_seconds = WallTimeInSeconds() - t1;
+        global_summary->permutation_build_time_in_seconds = WallTimeInSeconds() - t1;
 
         global_summary->num_parameters = num_parameters;
         global_summary->num_iterations = static_cast<unsigned int>(permutations.size());

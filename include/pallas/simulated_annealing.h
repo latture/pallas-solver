@@ -164,7 +164,7 @@ namespace pallas {
              * defined `StepFunction` with the scoped_ptr to the `StepFunction`
              * held within the `pallas::SimulatedAnnealing::Options` struct.
              * 
-             * @param user_step_function pallas::scoped_ptr<pallas::StepFunction>. This function generates radomized candidate solutions based on the current position. 
+             * @param user_step_function pallas::scoped_ptr<pallas::StepFunction>. This function generates randomized candidate solutions based on the current position.
              */
             void set_step_function(scoped_ptr<StepFunction>& user_step_function) {
                 swap(user_step_function, step_function);
@@ -176,7 +176,7 @@ namespace pallas {
             CoolingSchedule::Options cooling_schedule_options;
 
             /**
-             * Contains any changes to the default options for the local minimization algorthm. 
+             * Contains any changes to the default options for the local minimization algorithm.
              * See the documentation for ceres::GradientProblemSolver::Options for relevant options
              */
             GradientLocalMinimizer::Options local_minimizer_options;
@@ -207,7 +207,7 @@ namespace pallas {
             double minimum_cost;
 
             /**
-             * Whether the global minimum found through differential evolution should be subjected to a local minimzation "polishing" step before returning the result.
+             * Whether the global minimum found through differential evolution should be subjected to a local minimization "polishing" step before returning the result.
              */
             bool polish_output;
 
@@ -223,7 +223,7 @@ namespace pallas {
          */
         struct Summary {
            /**
-            * @brief Default constuctor
+            * @brief Default constructor
             */
             Summary();
 
@@ -248,7 +248,7 @@ namespace pallas {
 
             unsigned int num_parameters;/**<Number of parameters in the problem.*/
 
-            unsigned int num_iterations;/**<Number of basinhopping iterations*/
+            unsigned int num_iterations;/**<Number of iterations*/
 
             double total_time_in_seconds;/**<total time elapsed in global minimizer*/
 
@@ -284,10 +284,10 @@ namespace pallas {
 
     private:
         /**
-         * @brief Checks to see if any temination conditions were met.
+         * @brief Checks to see if any termination conditions were met.
          * 
-         * @param options pallas::Basinhopping::Options. Options used to configure the optimization.
-         * @param message std::string*. If a termination condition is met, a message describing the satified condition is stored in the variable. 
+         * @param options pallas::SimulatedAnnealing::Options. Options used to configure the optimization.
+         * @param message std::string*. If a termination condition is met, a message describing the satisfied condition is stored in the variable.
          * @param termination_type pallas::TerminationType*. This
          * @return Returns `true` if a termination condition was meet, `false` otherwise. 
          */
@@ -296,7 +296,7 @@ namespace pallas {
                                     TerminationType * termination_type);
 
         /**
-         * @brief Updates the global summary before exiting the basinhopping algorithm.
+         * @brief Updates the global summary before exiting the simulated annealing algorithm.
          */
         void prepare_final_summary_(SimulatedAnnealing::Summary *global_summary,
                                     const GradientLocalMinimizer::Summary &local_summary);

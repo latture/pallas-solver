@@ -4,9 +4,9 @@
 * \author Ryan Latture
 * \date 5-18-15
 *
-* This file contains a C++ implementation of a brute force minimzation algorithm.
+* This file contains a C++ implementation of a brute force minimization algorithm.
 * This code relies on the Google Ceres local minimization functions, and
-* is inspired by the SciPy implementaion found in scipy.optimize.
+* is inspired by the SciPy implementation found in scipy.optimize.
 */
 
 // Pallas Solver
@@ -43,7 +43,7 @@
 namespace pallas {
 
     /**
-     * @brief Minimizes an objective function by brute force, trying all possible combinations of specified parameter ranges and outputing the best solution found.
+     * @brief Minimizes an objective function by brute force, trying all possible combinations of specified parameter ranges and outputs the best solution found.
      * @details <B>Example</B>
      * @code
      #include "glog/logging.h"
@@ -128,12 +128,12 @@ namespace pallas {
             };
 
             /**
-             * Contains any changes to the default options for the local minimization algorthm. See the documentation for ceres::GradientProblemSolver::Options for relevant options.
+             * Contains any changes to the default options for the local minimization algorithm. See the documentation for ceres::GradientProblemSolver::Options for relevant options.
              */
             GradientLocalMinimizer::Options local_minimizer_options;
             
             /**
-             * Whether the global minimum found through brute force should be subjected to a local minimzation "polishing" step before returning the result.
+             * Whether the global minimum found through brute force should be subjected to a local minimization "polishing" step before returning the result.
              */
             bool polish_output;
 
@@ -150,7 +150,7 @@ namespace pallas {
          */
         struct Summary {
            /**
-            * @brief Default constuctor
+            * @brief Default constructor
             */
             Summary();
 
@@ -168,13 +168,13 @@ namespace pallas {
 
             unsigned int num_parameters;/**<Number of parameters in the problem.*/
 
-            unsigned int num_iterations;/**<Number of basinhopping iterations*/
+            unsigned int num_iterations;/**<Number of iterations*/
 
             double total_time_in_seconds;/**<total time elapsed in global minimizer*/
 
             double local_minimization_time_in_seconds;/**<time spent in local minimizer*/
 
-            double permuation_build_time_in_seconds;/**<time spent calculating the possible permutations of the input parameter ranges*/
+            double permutation_build_time_in_seconds;/**<time spent calculating the possible permutations of the input parameter ranges*/
 
             double cost_evaluation_time_in_seconds;/**<time spent evaluating cost function (outside local minimization)*/
 
@@ -189,34 +189,34 @@ namespace pallas {
          * 
          * @param start double. The first value to test along the degree of freedom.
          * @param stop double. The last value to test along the degree of freedom.
-         * @param size int. The discete number of samples to test on the range `[start, stop]`
+         * @param size int. The discrete number of samples to test on the range `[start, stop]`
          */
         struct ParameterRange {
 
             /**
-             * @brief Default constuctor
+             * @brief Default constructor
              * @details All values are initialized to 0.
              */
             ParameterRange() : start(0), stop(0), size(0) {};
 
             /**
-             * @brief Constuctor
+             * @brief Constructor
              * @details Specifies the interval over which the ith degree of freedom should be tested.
              * 
              * @param start double. The first value to test along the degree of freedom.
              * @param stop double. The last value to test along the degree of freedom.
-             * @param size int. The discete number of samples to test on the range `[start, stop]`.
+             * @param size int. The discrete number of samples to test on the range `[start, stop]`.
              */
             ParameterRange(double start, double stop, int size)
                     : start(start), stop(stop), size(size) {};
 
             double start;/**<The first value to test along the degree of freedom.*/
             double stop;/**<The last value to test along the degree of freedom.*/
-            int size;/**<The discete number of samples to test on the range `[start, stop]`.*/
+            int size;/**<The discrete number of samples to test on the range `[start, stop]`.*/
         };
 
         /**
-         * @brief Default constuctor
+         * @brief Default constructor
          */
         Brute() {};
 
@@ -249,7 +249,7 @@ namespace pallas {
         /**
          * @brief Constructs all possible permutations of the input parameter ranges.
          * 
-         * @param expanded_ranges std::vector<Vector>. Contains linearly spaced vectors of all sample points for the input parameter ranges. Used internallly on the result of Brute::expand_parameter_ranges_.
+         * @param expanded_ranges std::vector<Vector>. Contains linearly spaced vectors of all sample points for the input parameter ranges. Used internally on the result of Brute::expand_parameter_ranges_.
          * @return All possible permutations of the input parameter ranges. Because all permutations are precalculated this could be memory intensive if a large number of parameters and sample points are provided.
          */
         std::vector<Vector> build_permuations_(const std::vector<Vector> &expanded_ranges);
