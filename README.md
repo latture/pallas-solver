@@ -30,7 +30,7 @@ Once CMake, Ceres, and glog are built and installed use the following steps to b
   * Navigate to the pallas root directory.
   * On the same level as the `README.md`, create a folder named `build`.
   * In the terminal, navigate to the newly created `build` folder.
-  * Execute the following command: `cmake .. -DCERES_DIR:PATH=/path/to/CeresConfig.cmake`, where
+  * Execute the following command: `cmake .. -DCMAKE_PREFIX_PATH=/path/to/CeresConfig.cmake`, where
       `/path/to/CeresConfig.cmake` denotes the folder where the file `CeresConfig.cmake` is located
       Currently on Linux, Ceres by default will place this file at `/usr/local/share/Ceres`, though
       this may change in the future and may be different on your machine.
