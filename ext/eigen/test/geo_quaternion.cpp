@@ -30,8 +30,8 @@ template<typename QuatType> void check_slerp(const QuatType& q0, const QuatType&
   Scalar largeEps = test_precision<Scalar>();
 
   Scalar theta_tot = AA(q1*q0.inverse()).angle();
-  if(theta_tot>EIGEN_PI)
-    theta_tot = Scalar(2.*EIGEN_PI)-theta_tot;
+  if(theta_tot>M_PI)
+    theta_tot = Scalar(2.*M_PI)-theta_tot;
   for(Scalar t=0; t<=Scalar(1.001); t+=Scalar(0.1))
   {
     QuatType q = q0.slerp(t,q1);
@@ -64,8 +64,8 @@ template<typename Scalar, int Options> void quaternion(void)
           v2 = Vector3::Random(),
           v3 = Vector3::Random();
 
-  Scalar  a = internal::random<Scalar>(-Scalar(EIGEN_PI), Scalar(EIGEN_PI)),
-          b = internal::random<Scalar>(-Scalar(EIGEN_PI), Scalar(EIGEN_PI));
+  Scalar  a = internal::random<Scalar>(-Scalar(M_PI), Scalar(M_PI)),
+          b = internal::random<Scalar>(-Scalar(M_PI), Scalar(M_PI));
 
   // Quaternion: Identity(), setIdentity();
   Quaternionx q1, q2;
@@ -82,8 +82,8 @@ template<typename Scalar, int Options> void quaternion(void)
 
   // angular distance
   Scalar refangle = abs(AngleAxisx(q1.inverse()*q2).angle());
-  if (refangle>Scalar(EIGEN_PI))
-    refangle = Scalar(2)*Scalar(EIGEN_PI) - refangle;
+  if (refangle>Scalar(M_PI))
+    refangle = Scalar(2)*Scalar(M_PI) - refangle;
 
   if((q1.coeffs()-q2.coeffs()).norm() > 10*largeEps)
   {
@@ -156,7 +156,7 @@ template<typename Scalar, int Options> void quaternion(void)
   check_slerp(q1,q2);
 
   q1 = AngleAxisx(b, v1.normalized());
-  q2 = AngleAxisx(b+Scalar(EIGEN_PI), v1.normalized());
+  q2 = AngleAxisx(b+Scalar(M_PI), v1.normalized());
   check_slerp(q1,q2);
 
   q1 = AngleAxisx(b,  v1.normalized());
@@ -179,11 +179,11 @@ template<typename Scalar> void mapQuaternion(void){
   
   Vector3 v0 = Vector3::Random(),
           v1 = Vector3::Random();
-  Scalar  a = internal::random<Scalar>(-Scalar(EIGEN_PI), Scalar(EIGEN_PI));
+  Scalar  a = internal::random<Scalar>(-Scalar(M_PI), Scalar(M_PI));
 
-  EIGEN_ALIGN_MAX Scalar array1[4];
-  EIGEN_ALIGN_MAX Scalar array2[4];
-  EIGEN_ALIGN_MAX Scalar array3[4+1];
+  EIGEN_ALIGN16 Scalar array1[4];
+  EIGEN_ALIGN16 Scalar array2[4];
+  EIGEN_ALIGN16 Scalar array3[4+1];
   Scalar* array3unaligned = array3+1;
   
   MQuaternionA    mq1(array1);
@@ -232,9 +232,9 @@ template<typename Scalar> void quaternionAlignment(void){
   typedef Quaternion<Scalar,AutoAlign> QuaternionA;
   typedef Quaternion<Scalar,DontAlign> QuaternionUA;
 
-  EIGEN_ALIGN_MAX Scalar array1[4];
-  EIGEN_ALIGN_MAX Scalar array2[4];
-  EIGEN_ALIGN_MAX Scalar array3[4+1];
+  EIGEN_ALIGN16 Scalar array1[4];
+  EIGEN_ALIGN16 Scalar array2[4];
+  EIGEN_ALIGN16 Scalar array3[4+1];
   Scalar* arrayunaligned = array3+1;
 
   QuaternionA *q1 = ::new(reinterpret_cast<void*>(array1)) QuaternionA;
@@ -247,8 +247,8 @@ template<typename Scalar> void quaternionAlignment(void){
 
   VERIFY_IS_APPROX(q1->coeffs(), q2->coeffs());
   VERIFY_IS_APPROX(q1->coeffs(), q3->coeffs());
-  #if defined(EIGEN_VECTORIZE) && EIGEN_MAX_STATIC_ALIGN_BYTES>0
-  if(internal::packet_traits<Scalar>::Vectorizable && internal::packet_traits<Scalar>::size<=4)
+  #if defined(EIGEN_VECTORIZE) && EIGEN_ALIGN_STATICALLY
+  if(internal::packet_traits<Scalar>::Vectorizable)
     VERIFY_RAISES_ASSERT((::new(reinterpret_cast<void*>(arrayunaligned)) QuaternionA));
   #endif
 }

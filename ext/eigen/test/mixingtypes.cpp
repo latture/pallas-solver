@@ -52,15 +52,11 @@ template<int SizeAtCompileType> void mixingtypes(int size = SizeAtCompileType)
 
   mf+mf;
   VERIFY_RAISES_ASSERT(mf+md);
-#ifndef EIGEN_HAS_STD_RESULT_OF
-  // this one does not even compile with C++11
   VERIFY_RAISES_ASSERT(mf+mcf);
-#endif
-  // the following do not even compile since the introduction of evaluators
-//   VERIFY_RAISES_ASSERT(vf=vd);
-//   VERIFY_RAISES_ASSERT(vf+=vd);
-//   VERIFY_RAISES_ASSERT(mcd=md);
-  
+  VERIFY_RAISES_ASSERT(vf=vd);
+  VERIFY_RAISES_ASSERT(vf+=vd);
+  VERIFY_RAISES_ASSERT(mcd=md);
+
   // check scalar products
   VERIFY_IS_APPROX(vcf * sf , vcf * complex<float>(sf));
   VERIFY_IS_APPROX(sd * vcd, complex<double>(sd) * vcd);
@@ -101,25 +97,11 @@ template<int SizeAtCompileType> void mixingtypes(int size = SizeAtCompileType)
   VERIFY_IS_APPROX(sd*mcd*md, sd*mcd*md.template cast<CD>());
   VERIFY_IS_APPROX(scd*md*mcd, scd*md.template cast<CD>().eval()*mcd);
   VERIFY_IS_APPROX(scd*mcd*md, scd*mcd*md.template cast<CD>());
-  
+
   VERIFY_IS_APPROX(sf*mf*mcf, sf*mf.template cast<CF>()*mcf);
   VERIFY_IS_APPROX(sf*mcf*mf, sf*mcf*mf.template cast<CF>());
   VERIFY_IS_APPROX(scf*mf*mcf, scf*mf.template cast<CF>()*mcf);
   VERIFY_IS_APPROX(scf*mcf*mf, scf*mcf*mf.template cast<CF>());
-  
-  VERIFY_IS_APPROX(sd*md.adjoint()*mcd, (sd*md).template cast<CD>().eval().adjoint()*mcd);
-  VERIFY_IS_APPROX(sd*mcd.adjoint()*md, sd*mcd.adjoint()*md.template cast<CD>());
-  VERIFY_IS_APPROX(sd*md.adjoint()*mcd.adjoint(), (sd*md).template cast<CD>().eval().adjoint()*mcd.adjoint());
-  VERIFY_IS_APPROX(sd*mcd.adjoint()*md.adjoint(), sd*mcd.adjoint()*md.template cast<CD>().adjoint());
-  VERIFY_IS_APPROX(sd*md*mcd.adjoint(), (sd*md).template cast<CD>().eval()*mcd.adjoint());
-  VERIFY_IS_APPROX(sd*mcd*md.adjoint(), sd*mcd*md.template cast<CD>().adjoint());
-  
-  VERIFY_IS_APPROX(sf*mf.adjoint()*mcf, (sf*mf).template cast<CF>().eval().adjoint()*mcf);
-  VERIFY_IS_APPROX(sf*mcf.adjoint()*mf, sf*mcf.adjoint()*mf.template cast<CF>());
-  VERIFY_IS_APPROX(sf*mf.adjoint()*mcf.adjoint(), (sf*mf).template cast<CF>().eval().adjoint()*mcf.adjoint());
-  VERIFY_IS_APPROX(sf*mcf.adjoint()*mf.adjoint(), sf*mcf.adjoint()*mf.template cast<CF>().adjoint());
-  VERIFY_IS_APPROX(sf*mf*mcf.adjoint(), (sf*mf).template cast<CF>().eval()*mcf.adjoint());
-  VERIFY_IS_APPROX(sf*mcf*mf.adjoint(), sf*mcf*mf.template cast<CF>().adjoint());
 
   VERIFY_IS_APPROX(sf*mf*vcf, (sf*mf).template cast<CF>().eval()*vcf);
   VERIFY_IS_APPROX(scf*mf*vcf,(scf*mf.template cast<CF>()).eval()*vcf);
@@ -144,9 +126,7 @@ template<int SizeAtCompileType> void mixingtypes(int size = SizeAtCompileType)
 
 void test_mixingtypes()
 {
-  for(int i = 0; i < g_repeat; i++) {
-    CALL_SUBTEST_1(mixingtypes<3>());
-    CALL_SUBTEST_2(mixingtypes<4>());
-    CALL_SUBTEST_3(mixingtypes<Dynamic>(internal::random<int>(1,EIGEN_TEST_MAX_SIZE)));
-  }
+  CALL_SUBTEST_1(mixingtypes<3>());
+  CALL_SUBTEST_2(mixingtypes<4>());
+  CALL_SUBTEST_3(mixingtypes<Dynamic>(internal::random<int>(1,EIGEN_TEST_MAX_SIZE)));
 }

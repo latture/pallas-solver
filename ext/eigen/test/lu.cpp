@@ -100,9 +100,9 @@ template<typename MatrixType> void lu_invertible()
      LU.h
   */
   typedef typename NumTraits<typename MatrixType::Scalar>::Real RealScalar;
-  Index size = MatrixType::RowsAtCompileTime;
+  DenseIndex size = MatrixType::RowsAtCompileTime;
   if( size==Dynamic)
-    size = internal::random<Index>(1,EIGEN_TEST_MAX_SIZE);
+    size = internal::random<DenseIndex>(1,EIGEN_TEST_MAX_SIZE);
 
   MatrixType m1(size, size), m2(size, size), m3(size, size);
   FullPivLU<MatrixType> lu;

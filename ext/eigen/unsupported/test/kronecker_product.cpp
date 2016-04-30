@@ -107,34 +107,31 @@ void test_kronecker_product()
 
   SparseMatrix<double,RowMajor> SM_row_a(SM_a), SM_row_b(SM_b);
 
-  // test DM_fixedSize = kroneckerProduct(DM_block,DM)
+  // test kroneckerProduct(DM_block,DM,DM_fixedSize)
   Matrix<double, 6, 6> DM_fix_ab = kroneckerProduct(DM_a.topLeftCorner<2,3>(),DM_b);
 
   CALL_SUBTEST(check_kronecker_product(DM_fix_ab));
-  CALL_SUBTEST(check_kronecker_product(kroneckerProduct(DM_a.topLeftCorner<2,3>(),DM_b)));
 
   for(int i=0;i<DM_fix_ab.rows();++i)
     for(int j=0;j<DM_fix_ab.cols();++j)
        VERIFY_IS_APPROX(kroneckerProduct(DM_a,DM_b).coeff(i,j), DM_fix_ab(i,j));
 
-  // test DM_block = kroneckerProduct(DM,DM)
+  // test kroneckerProduct(DM,DM,DM_block)
   MatrixXd DM_block_ab(10,15);
   DM_block_ab.block<6,6>(2,5) = kroneckerProduct(DM_a,DM_b);
   CALL_SUBTEST(check_kronecker_product(DM_block_ab.block<6,6>(2,5)));
 
-  // test DM = kroneckerProduct(DM,DM)
+  // test kroneckerProduct(DM,DM,DM)
   MatrixXd DM_ab = kroneckerProduct(DM_a,DM_b);
   CALL_SUBTEST(check_kronecker_product(DM_ab));
-  CALL_SUBTEST(check_kronecker_product(kroneckerProduct(DM_a,DM_b)));
 
-  // test SM = kroneckerProduct(SM,DM)
+  // test kroneckerProduct(SM,DM,SM)
   SparseMatrix<double> SM_ab = kroneckerProduct(SM_a,DM_b);
   CALL_SUBTEST(check_kronecker_product(SM_ab));
   SparseMatrix<double,RowMajor> SM_ab2 = kroneckerProduct(SM_a,DM_b);
   CALL_SUBTEST(check_kronecker_product(SM_ab2));
-  CALL_SUBTEST(check_kronecker_product(kroneckerProduct(SM_a,DM_b)));
 
-  // test SM = kroneckerProduct(DM,SM)
+  // test kroneckerProduct(DM,SM,SM)
   SM_ab.setZero();
   SM_ab.insert(0,0)=37.0;
   SM_ab = kroneckerProduct(DM_a,SM_b);
@@ -143,9 +140,8 @@ void test_kronecker_product()
   SM_ab2.insert(0,0)=37.0;
   SM_ab2 = kroneckerProduct(DM_a,SM_b);
   CALL_SUBTEST(check_kronecker_product(SM_ab2));
-  CALL_SUBTEST(check_kronecker_product(kroneckerProduct(DM_a,SM_b)));
 
-  // test SM = kroneckerProduct(SM,SM)
+  // test kroneckerProduct(SM,SM,SM)
   SM_ab.resize(2,33);
   SM_ab.insert(0,0)=37.0;
   SM_ab = kroneckerProduct(SM_a,SM_b);
@@ -154,9 +150,8 @@ void test_kronecker_product()
   SM_ab2.insert(0,0)=37.0;
   SM_ab2 = kroneckerProduct(SM_a,SM_b);
   CALL_SUBTEST(check_kronecker_product(SM_ab2));
-  CALL_SUBTEST(check_kronecker_product(kroneckerProduct(SM_a,SM_b)));
 
-  // test SM = kroneckerProduct(SM,SM) with sparse pattern
+  // test kroneckerProduct(SM,SM,SM) with sparse pattern
   SM_a.resize(4,5);
   SM_b.resize(3,2);
   SM_a.resizeNonZeros(0);
@@ -174,7 +169,7 @@ void test_kronecker_product()
   SM_ab = kroneckerProduct(SM_a,SM_b);
   CALL_SUBTEST(check_sparse_kronecker_product(SM_ab));
 
-  // test dimension of result of DM = kroneckerProduct(DM,DM)
+  // test dimension of result of kroneckerProduct(DM,DM,DM)
   MatrixXd DM_a2(2,1);
   MatrixXd DM_b2(5,4);
   MatrixXd DM_ab2 = kroneckerProduct(DM_a2,DM_b2);
@@ -183,50 +178,4 @@ void test_kronecker_product()
   DM_b2.resize(4,8);
   DM_ab2 = kroneckerProduct(DM_a2,DM_b2);
   CALL_SUBTEST(check_dimension(DM_ab2,10*4,9*8));
-  
-  for(int i = 0; i < g_repeat; i++)
-  {
-    double density = Eigen::internal::random<double>(0.01,0.5);
-    int ra = Eigen::internal::random<int>(1,50);
-    int ca = Eigen::internal::random<int>(1,50);
-    int rb = Eigen::internal::random<int>(1,50);
-    int cb = Eigen::internal::random<int>(1,50);
-    SparseMatrix<float,ColMajor> sA(ra,ca), sB(rb,cb), sC;
-    SparseMatrix<float,RowMajor> sC2;
-    MatrixXf dA(ra,ca), dB(rb,cb), dC;
-    initSparse(density, dA, sA);
-    initSparse(density, dB, sB);
-    
-    sC = kroneckerProduct(sA,sB);
-    dC = kroneckerProduct(dA,dB);
-    VERIFY_IS_APPROX(MatrixXf(sC),dC);
-    
-    sC = kroneckerProduct(sA.transpose(),sB);
-    dC = kroneckerProduct(dA.transpose(),dB);
-    VERIFY_IS_APPROX(MatrixXf(sC),dC);
-    
-    sC = kroneckerProduct(sA.transpose(),sB.transpose());
-    dC = kroneckerProduct(dA.transpose(),dB.transpose());
-    VERIFY_IS_APPROX(MatrixXf(sC),dC);
-    
-    sC = kroneckerProduct(sA,sB.transpose());
-    dC = kroneckerProduct(dA,dB.transpose());
-    VERIFY_IS_APPROX(MatrixXf(sC),dC);
-    
-    sC2 = kroneckerProduct(sA,sB);
-    dC = kroneckerProduct(dA,dB);
-    VERIFY_IS_APPROX(MatrixXf(sC2),dC);
-    
-    sC2 = kroneckerProduct(dA,sB);
-    dC = kroneckerProduct(dA,dB);
-    VERIFY_IS_APPROX(MatrixXf(sC2),dC);
-    
-    sC2 = kroneckerProduct(sA,dB);
-    dC = kroneckerProduct(dA,dB);
-    VERIFY_IS_APPROX(MatrixXf(sC2),dC);
-    
-    sC2 = kroneckerProduct(2*sA,sB);
-    dC = kroneckerProduct(2*dA,dB);
-    VERIFY_IS_APPROX(MatrixXf(sC2),dC);
-  }
 }

@@ -13,8 +13,7 @@
     ref2 = ref1 = DEST;                               \
     DEST.template triangularView<TRI>() OP;           \
     ref1 OP;                                          \
-    ref2.template triangularView<TRI>()               \
-      = ref1.template triangularView<TRI>();          \
+    ref2.template triangularView<TRI>() = ref1;       \
     VERIFY_IS_APPROX(DEST,ref2);                      \
   }
 
@@ -33,8 +32,6 @@ template<typename Scalar> void mmtr(int size)
   MatrixColMaj osc(othersize,size); osc.setRandom();
   MatrixRowMaj sor(size,othersize); sor.setRandom();
   MatrixRowMaj osr(othersize,size); osr.setRandom();
-  MatrixColMaj sqc(size,size); sqc.setRandom();
-  MatrixRowMaj sqr(size,size); sqr.setRandom();
   
   Scalar s = internal::random<Scalar>();
   
@@ -52,16 +49,6 @@ template<typename Scalar> void mmtr(int size)
   CHECK_MMTR(matc, Upper, -= s*(osc.transpose()*osc.conjugate()));
   CHECK_MMTR(matr, Lower, -= s*soc*soc.adjoint());
   CHECK_MMTR(matr, Upper, -= soc*(s*soc.adjoint()));
-  
-  CHECK_MMTR(matc, Lower, -= s*sqr*sqc.template triangularView<Upper>());
-  CHECK_MMTR(matc, Upper, = s*sqc*sqr.template triangularView<Upper>());
-  CHECK_MMTR(matc, Lower, += s*sqr*sqc.template triangularView<Lower>());
-  CHECK_MMTR(matc, Upper, = s*sqc*sqc.template triangularView<Lower>());
-  
-  CHECK_MMTR(matc, Lower, = (s*sqr).template triangularView<Upper>()*sqc);
-  CHECK_MMTR(matc, Upper, -= (s*sqc).template triangularView<Upper>()*sqc);
-  CHECK_MMTR(matc, Lower, = (s*sqr).template triangularView<Lower>()*sqc);
-  CHECK_MMTR(matc, Upper, += (s*sqc).template triangularView<Lower>()*sqc);
 }
 
 void test_product_mmtr()

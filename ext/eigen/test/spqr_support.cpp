@@ -5,8 +5,6 @@
 //
 // This Source Code Form is subject to the terms of the Mozilla
 // Public License v. 2.0. If a copy of the MPL was not distributed
-
-#define EIGEN_NO_DEBUG_SMALL_PRODUCT_BLOCKS
 #include "sparse.h"
 #include <Eigen/SPQRSupport>
 
@@ -37,7 +35,7 @@ template<typename Scalar> void test_spqr_scalar()
   SPQR<MatrixType> solver; 
   generate_sparse_rectangular_problem(A,dA);
   
-  Index m = A.rows();
+  int m = A.rows();
   b = DenseVector::Random(m);
   solver.compute(A);
   if (solver.info() != Success)

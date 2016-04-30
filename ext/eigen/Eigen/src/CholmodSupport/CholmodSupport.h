@@ -48,8 +48,8 @@ void cholmod_configure_matrix(CholmodType& mat)
 /** Wraps the Eigen sparse matrix \a mat into a Cholmod sparse matrix object.
   * Note that the data are shared.
   */
-template<typename _Scalar, int _Options, typename _StorageIndex>
-cholmod_sparse viewAsCholmod(SparseMatrix<_Scalar,_Options,_StorageIndex>& mat)
+template<typename _Scalar, int _Options, typename _Index>
+cholmod_sparse viewAsCholmod(SparseMatrix<_Scalar,_Options,_Index>& mat)
 {
   cholmod_sparse res;
   res.nzmax   = mat.nonZeros();
@@ -74,11 +74,11 @@ cholmod_sparse viewAsCholmod(SparseMatrix<_Scalar,_Options,_StorageIndex>& mat)
   res.dtype   = 0;
   res.stype   = -1;
   
-  if (internal::is_same<_StorageIndex,int>::value)
+  if (internal::is_same<_Index,int>::value)
   {
     res.itype = CHOLMOD_INT;
   }
-  else if (internal::is_same<_StorageIndex,UF_long>::value)
+  else if (internal::is_same<_Index,SuiteSparse_long>::value)
   {
     res.itype = CHOLMOD_LONG;
   }
@@ -105,7 +105,7 @@ const cholmod_sparse viewAsCholmod(const SparseMatrix<_Scalar,_Options,_Index>& 
 /** Returns a view of the Eigen sparse matrix \a mat as Cholmod sparse matrix.
   * The data are not copied but shared. */
 template<typename _Scalar, int _Options, typename _Index, unsigned int UpLo>
-cholmod_sparse viewAsCholmod(const SparseSelfAdjointView<const SparseMatrix<_Scalar,_Options,_Index>, UpLo>& mat)
+cholmod_sparse viewAsCholmod(const SparseSelfAdjointView<SparseMatrix<_Scalar,_Options,_Index>, UpLo>& mat)
 {
   cholmod_sparse res = viewAsCholmod(mat.matrix().const_cast_derived());
   
@@ -138,12 +138,12 @@ cholmod_dense viewAsCholmod(MatrixBase<Derived>& mat)
 
 /** Returns a view of the Cholmod sparse matrix \a cm as an Eigen sparse matrix.
   * The data are not copied but shared. */
-template<typename Scalar, int Flags, typename StorageIndex>
-MappedSparseMatrix<Scalar,Flags,StorageIndex> viewAsEigen(cholmod_sparse& cm)
+template<typename Scalar, int Flags, typename Index>
+MappedSparseMatrix<Scalar,Flags,Index> viewAsEigen(cholmod_sparse& cm)
 {
-  return MappedSparseMatrix<Scalar,Flags,StorageIndex>
-         (cm.nrow, cm.ncol, static_cast<StorageIndex*>(cm.p)[cm.ncol],
-          static_cast<StorageIndex*>(cm.p), static_cast<StorageIndex*>(cm.i),static_cast<Scalar*>(cm.x) );
+  return MappedSparseMatrix<Scalar,Flags,Index>
+         (cm.nrow, cm.ncol, static_cast<Index*>(cm.p)[cm.ncol],
+          static_cast<Index*>(cm.p), static_cast<Index*>(cm.i),static_cast<Scalar*>(cm.x) );
 }
 
 enum CholmodMode {
@@ -157,31 +157,27 @@ enum CholmodMode {
   * \sa class CholmodSupernodalLLT, class CholmodSimplicialLDLT, class CholmodSimplicialLLT
   */
 template<typename _MatrixType, int _UpLo, typename Derived>
-class CholmodBase : public SparseSolverBase<Derived>
+class CholmodBase : internal::noncopyable
 {
-  protected:
-    typedef SparseSolverBase<Derived> Base;
-    using Base::derived;
-    using Base::m_isInitialized;
   public:
     typedef _MatrixType MatrixType;
     enum { UpLo = _UpLo };
     typedef typename MatrixType::Scalar Scalar;
     typedef typename MatrixType::RealScalar RealScalar;
     typedef MatrixType CholMatrixType;
-    typedef typename MatrixType::StorageIndex StorageIndex;
+    typedef typename MatrixType::Index Index;
 
   public:
 
     CholmodBase()
-      : m_cholmodFactor(0), m_info(Success)
+      : m_cholmodFactor(0), m_info(Success), m_isInitialized(false)
     {
       m_shiftOffset[0] = m_shiftOffset[1] = RealScalar(0.0);
       cholmod_start(&m_cholmod);
     }
 
-    explicit CholmodBase(const MatrixType& matrix)
-      : m_cholmodFactor(0), m_info(Success)
+    CholmodBase(const MatrixType& matrix)
+      : m_cholmodFactor(0), m_info(Success), m_isInitialized(false)
     {
       m_shiftOffset[0] = m_shiftOffset[1] = RealScalar(0.0);
       cholmod_start(&m_cholmod);
@@ -195,8 +191,11 @@ class CholmodBase : public SparseSolverBase<Derived>
       cholmod_finish(&m_cholmod);
     }
     
-    inline StorageIndex cols() const { return internal::convert_index<StorageIndex, Index>(m_cholmodFactor->n); }
-    inline StorageIndex rows() const { return internal::convert_index<StorageIndex, Index>(m_cholmodFactor->n); }
+    inline Index cols() const { return m_cholmodFactor->n; }
+    inline Index rows() const { return m_cholmodFactor->n; }
+    
+    Derived& derived() { return *static_cast<Derived*>(this); }
+    const Derived& derived() const { return *static_cast<const Derived*>(this); }
     
     /** \brief Reports whether previous computation was successful.
       *
@@ -215,6 +214,34 @@ class CholmodBase : public SparseSolverBase<Derived>
       analyzePattern(matrix);
       factorize(matrix);
       return derived();
+    }
+    
+    /** \returns the solution x of \f$ A x = b \f$ using the current decomposition of A.
+      *
+      * \sa compute()
+      */
+    template<typename Rhs>
+    inline const internal::solve_retval<CholmodBase, Rhs>
+    solve(const MatrixBase<Rhs>& b) const
+    {
+      eigen_assert(m_isInitialized && "LLT is not initialized.");
+      eigen_assert(rows()==b.rows()
+                && "CholmodDecomposition::solve(): invalid number of rows of the right hand side matrix b");
+      return internal::solve_retval<CholmodBase, Rhs>(*this, b.derived());
+    }
+    
+    /** \returns the solution x of \f$ A x = b \f$ using the current decomposition of A.
+      *
+      * \sa compute()
+      */
+    template<typename Rhs>
+    inline const internal::sparse_solve_retval<CholmodBase, Rhs>
+    solve(const SparseMatrixBase<Rhs>& b) const
+    {
+      eigen_assert(m_isInitialized && "LLT is not initialized.");
+      eigen_assert(rows()==b.rows()
+                && "CholmodDecomposition::solve(): invalid number of rows of the right hand side matrix b");
+      return internal::sparse_solve_retval<CholmodBase, Rhs>(*this, b.derived());
     }
     
     /** Performs a symbolic decomposition on the sparsity pattern of \a matrix.
@@ -263,7 +290,7 @@ class CholmodBase : public SparseSolverBase<Derived>
     #ifndef EIGEN_PARSED_BY_DOXYGEN
     /** \internal */
     template<typename Rhs,typename Dest>
-    void _solve_impl(const MatrixBase<Rhs> &b, MatrixBase<Dest> &dest) const
+    void _solve(const MatrixBase<Rhs> &b, MatrixBase<Dest> &dest) const
     {
       eigen_assert(m_factorizationIsOk && "The decomposition is not in a valid state for solving, you must first call either compute() or symbolic()/numeric()");
       const Index size = m_cholmodFactor->n;
@@ -277,7 +304,6 @@ class CholmodBase : public SparseSolverBase<Derived>
       if(!x_cd)
       {
         this->m_info = NumericalIssue;
-        return;
       }
       // TODO optimize this copy by swapping when possible (be careful with alignment, etc.)
       dest = Matrix<Scalar,Dest::RowsAtCompileTime,Dest::ColsAtCompileTime>::Map(reinterpret_cast<Scalar*>(x_cd->x),b.rows(),b.cols());
@@ -286,7 +312,7 @@ class CholmodBase : public SparseSolverBase<Derived>
     
     /** \internal */
     template<typename RhsScalar, int RhsOptions, typename RhsIndex, typename DestScalar, int DestOptions, typename DestIndex>
-    void _solve_impl(const SparseMatrix<RhsScalar,RhsOptions,RhsIndex> &b, SparseMatrix<DestScalar,DestOptions,DestIndex> &dest) const
+    void _solve(const SparseMatrix<RhsScalar,RhsOptions,RhsIndex> &b, SparseMatrix<DestScalar,DestOptions,DestIndex> &dest) const
     {
       eigen_assert(m_factorizationIsOk && "The decomposition is not in a valid state for solving, you must first call either compute() or symbolic()/numeric()");
       const Index size = m_cholmodFactor->n;
@@ -299,7 +325,6 @@ class CholmodBase : public SparseSolverBase<Derived>
       if(!x_cs)
       {
         this->m_info = NumericalIssue;
-        return;
       }
       // TODO optimize this copy by swapping when possible (be careful with alignment, etc.)
       dest = viewAsEigen<DestScalar,DestOptions,DestIndex>(*x_cs);
@@ -332,6 +357,7 @@ class CholmodBase : public SparseSolverBase<Derived>
     cholmod_factor* m_cholmodFactor;
     RealScalar m_shiftOffset[2];
     mutable ComputationInfo m_info;
+    bool m_isInitialized;
     int m_factorizationIsOk;
     int m_analysisIsOk;
 };
@@ -369,7 +395,7 @@ class CholmodSimplicialLLT : public CholmodBase<_MatrixType, _UpLo, CholmodSimpl
     CholmodSimplicialLLT(const MatrixType& matrix) : Base()
     {
       init();
-      this->compute(matrix);
+      Base::compute(matrix);
     }
 
     ~CholmodSimplicialLLT() {}
@@ -416,7 +442,7 @@ class CholmodSimplicialLDLT : public CholmodBase<_MatrixType, _UpLo, CholmodSimp
     CholmodSimplicialLDLT(const MatrixType& matrix) : Base()
     {
       init();
-      this->compute(matrix);
+      Base::compute(matrix);
     }
 
     ~CholmodSimplicialLDLT() {}
@@ -461,7 +487,7 @@ class CholmodSupernodalLLT : public CholmodBase<_MatrixType, _UpLo, CholmodSuper
     CholmodSupernodalLLT(const MatrixType& matrix) : Base()
     {
       init();
-      this->compute(matrix);
+      Base::compute(matrix);
     }
 
     ~CholmodSupernodalLLT() {}
@@ -508,7 +534,7 @@ class CholmodDecomposition : public CholmodBase<_MatrixType, _UpLo, CholmodDecom
     CholmodDecomposition(const MatrixType& matrix) : Base()
     {
       init();
-      this->compute(matrix);
+      Base::compute(matrix);
     }
 
     ~CholmodDecomposition() {}
@@ -545,6 +571,36 @@ class CholmodDecomposition : public CholmodBase<_MatrixType, _UpLo, CholmodDecom
       m_cholmod.supernodal = CHOLMOD_AUTO;
     }
 };
+
+namespace internal {
+  
+template<typename _MatrixType, int _UpLo, typename Derived, typename Rhs>
+struct solve_retval<CholmodBase<_MatrixType,_UpLo,Derived>, Rhs>
+  : solve_retval_base<CholmodBase<_MatrixType,_UpLo,Derived>, Rhs>
+{
+  typedef CholmodBase<_MatrixType,_UpLo,Derived> Dec;
+  EIGEN_MAKE_SOLVE_HELPERS(Dec,Rhs)
+
+  template<typename Dest> void evalTo(Dest& dst) const
+  {
+    dec()._solve(rhs(),dst);
+  }
+};
+
+template<typename _MatrixType, int _UpLo, typename Derived, typename Rhs>
+struct sparse_solve_retval<CholmodBase<_MatrixType,_UpLo,Derived>, Rhs>
+  : sparse_solve_retval_base<CholmodBase<_MatrixType,_UpLo,Derived>, Rhs>
+{
+  typedef CholmodBase<_MatrixType,_UpLo,Derived> Dec;
+  EIGEN_MAKE_SPARSE_SOLVE_HELPERS(Dec,Rhs)
+
+  template<typename Dest> void evalTo(Dest& dst) const
+  {
+    dec()._solve(rhs(),dst);
+  }
+};
+
+} // end namespace internal
 
 } // end namespace Eigen
 

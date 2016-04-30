@@ -593,15 +593,18 @@ inline const AutoDiffScalar<Matrix<typename internal::traits<DerTypeA>::Scalar,D
 atan2(const AutoDiffScalar<DerTypeA>& a, const AutoDiffScalar<DerTypeB>& b)
 {
   using std::atan2;
+  using std::max;
   typedef typename internal::traits<DerTypeA>::Scalar Scalar;
   typedef AutoDiffScalar<Matrix<Scalar,Dynamic,1> > PlainADS;
   PlainADS ret;
   ret.value() = atan2(a.value(), b.value());
   
-  Scalar squared_hypot = a.value() * a.value() + b.value() * b.value();
+  Scalar tmp2 = a.value() * a.value();
+  Scalar tmp3 = b.value() * b.value();
+  Scalar tmp4 = tmp3/(tmp2+tmp3);
   
-  // if (squared_hypot==0) the derivation is undefined and the following results in a NaN:
-  ret.derivatives() = (a.derivatives() * b.value() - a.value() * b.derivatives()) / squared_hypot;
+  if (tmp4!=0)
+    ret.derivatives() = (a.derivatives() * b.value() - a.value() * b.derivatives()) * (tmp2+tmp3);
 
   return ret;
 }
@@ -626,10 +629,9 @@ EIGEN_AUTODIFF_DECLARE_GLOBAL_UNARY(acos,
 template<typename DerType> struct NumTraits<AutoDiffScalar<DerType> >
   : NumTraits< typename NumTraits<typename DerType::Scalar>::Real >
 {
-  typedef AutoDiffScalar<Matrix<typename NumTraits<typename DerType::Scalar>::Real,DerType::RowsAtCompileTime,DerType::ColsAtCompileTime,
-                                DerType::Options, DerType::MaxRowsAtCompileTime, DerType::MaxColsAtCompileTime> > Real;
+  typedef AutoDiffScalar<Matrix<typename NumTraits<typename DerType::Scalar>::Real,DerType::RowsAtCompileTime,DerType::ColsAtCompileTime> > Real;
   typedef AutoDiffScalar<DerType> NonInteger;
-  typedef AutoDiffScalar<DerType>& Nested;
+  typedef AutoDiffScalar<DerType> Nested;
   enum{
     RequireInitialization = 1
   };

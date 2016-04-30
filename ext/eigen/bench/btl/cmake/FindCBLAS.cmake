@@ -23,7 +23,6 @@ find_file(CBLAS_LIBRARIES
   libcblas.so.3
   PATHS
   /usr/lib
-  /usr/lib64
   $ENV{CBLASDIR}/lib
   ${LIB_INSTALL_DIR}
 )

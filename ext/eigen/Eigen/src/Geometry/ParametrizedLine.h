@@ -37,7 +37,7 @@ public:
   };
   typedef _Scalar Scalar;
   typedef typename NumTraits<Scalar>::Real RealScalar;
-  typedef Eigen::Index Index; ///< \deprecated since Eigen 3.3
+  typedef DenseIndex Index;
   typedef Matrix<Scalar,AmbientDimAtCompileTime,1,Options> VectorType;
 
   /** Default constructor without initialization */
@@ -129,7 +129,7 @@ public:
     * determined by \a prec.
     *
     * \sa MatrixBase::isApprox() */
-  bool isApprox(const ParametrizedLine& other, typename NumTraits<Scalar>::Real prec = NumTraits<Scalar>::dummy_precision()) const
+  bool isApprox(const ParametrizedLine& other, const typename NumTraits<Scalar>::Real& prec = NumTraits<Scalar>::dummy_precision()) const
   { return m_origin.isApprox(other.m_origin, prec) && m_direction.isApprox(other.m_direction, prec); }
 
 protected:

@@ -69,8 +69,7 @@ struct mapstaticmethods_impl<PlainObjectType, true, false>
 {
   static void run(const PlainObjectType& m)
   {
-    typedef typename PlainObjectType::Index Index;
-    Index rows = m.rows(), cols = m.cols();
+    int rows = m.rows(), cols = m.cols();
 
     int i = internal::random<int>(2,5), j = internal::random<int>(2,5);
 
@@ -116,8 +115,7 @@ struct mapstaticmethods_impl<PlainObjectType, true, true>
 {
   static void run(const PlainObjectType& v)
   {
-    typedef typename PlainObjectType::Index Index;
-    Index size = v.size();
+    int size = v.size();
 
     int i = internal::random<int>(2,5);
 

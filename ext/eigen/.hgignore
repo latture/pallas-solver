@@ -30,5 +30,3 @@ log
 patch
 a
 a.*
-lapack/testing
-lapack/reference

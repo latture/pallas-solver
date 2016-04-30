@@ -101,11 +101,11 @@ template<typename ArrayType> void vectorwiseop_array(const ArrayType& m)
 
   VERIFY_RAISES_ASSERT(m2.rowwise() /= rowvec.transpose());
   VERIFY_RAISES_ASSERT(m1.rowwise() / rowvec.transpose());
-
+  
   m2 = m1;
   // yes, there might be an aliasing issue there but ".rowwise() /="
-  // is supposed to evaluate " m2.colwise().sum()" into a temporary to avoid
-  // evaluating the reduction multiple times
+  // is suppposed to evaluate " m2.colwise().sum()" into to temporary to avoid
+  // evaluating the reducions multiple times
   if(ArrayType::RowsAtCompileTime>2 || ArrayType::RowsAtCompileTime==Dynamic)
   {
     m2.rowwise() /= m2.colwise().sum();
@@ -184,24 +184,19 @@ template<typename MatrixType> void vectorwiseop_matrix(const MatrixType& m)
 
   VERIFY_RAISES_ASSERT(m2.rowwise() -= rowvec.transpose());
   VERIFY_RAISES_ASSERT(m1.rowwise() - rowvec.transpose());
-
+  
   // test norm
   rrres = m1.colwise().norm();
   VERIFY_IS_APPROX(rrres(c), m1.col(c).norm());
   rcres = m1.rowwise().norm();
   VERIFY_IS_APPROX(rcres(r), m1.row(r).norm());
-
-  VERIFY_IS_APPROX(m1.cwiseAbs().colwise().sum(), m1.colwise().template lpNorm<1>());
-  VERIFY_IS_APPROX(m1.cwiseAbs().rowwise().sum(), m1.rowwise().template lpNorm<1>());
-  VERIFY_IS_APPROX(m1.cwiseAbs().colwise().maxCoeff(), m1.colwise().template lpNorm<Infinity>());
-  VERIFY_IS_APPROX(m1.cwiseAbs().rowwise().maxCoeff(), m1.rowwise().template lpNorm<Infinity>());
-
+  
   // test normalized
   m2 = m1.colwise().normalized();
   VERIFY_IS_APPROX(m2.col(c), m1.col(c).normalized());
   m2 = m1.rowwise().normalized();
   VERIFY_IS_APPROX(m2.row(r), m1.row(r).normalized());
-
+  
   // test normalize
   m2 = m1;
   m2.colwise().normalize();

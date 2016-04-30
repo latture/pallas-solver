@@ -93,7 +93,6 @@ void test_eigensolver_generic()
     CALL_SUBTEST_1( eigensolver(Matrix4f()) );
     s = internal::random<int>(1,EIGEN_TEST_MAX_SIZE/4);
     CALL_SUBTEST_2( eigensolver(MatrixXd(s,s)) );
-    TEST_SET_BUT_UNUSED_VARIABLE(s)
 
     // some trivial but implementation-wise tricky cases
     CALL_SUBTEST_2( eigensolver(MatrixXd(1,1)) );
@@ -115,24 +114,12 @@ void test_eigensolver_generic()
   CALL_SUBTEST_2(
   {
      MatrixXd A(1,1);
-     A(0,0) = std::sqrt(-1.); // is Not-a-Number
+     A(0,0) = std::sqrt(-1.);
      Eigen::EigenSolver<MatrixXd> solver(A);
-     VERIFY_IS_EQUAL(solver.info(), NumericalIssue);
+     MatrixXd V(1, 1);
+     V(0,0) = solver.eigenvectors()(0,0).real();
   }
   );
-  
-  // regression test for bug 793
-#ifdef EIGEN_TEST_PART_2
-  {
-     MatrixXd a(3,3);
-     a << 0,  0,  1,
-          1,  1, 1,
-          1, 1e+200,  1;
-     Eigen::EigenSolver<MatrixXd> eig(a);
-     VERIFY_IS_APPROX(a * eig.pseudoEigenvectors(), eig.pseudoEigenvectors() * eig.pseudoEigenvalueMatrix());
-     VERIFY_IS_APPROX(a * eig.eigenvectors(), eig.eigenvectors() * eig.eigenvalues().asDiagonal());
-  }
-#endif
   
   TEST_SET_BUT_UNUSED_VARIABLE(s)
 }

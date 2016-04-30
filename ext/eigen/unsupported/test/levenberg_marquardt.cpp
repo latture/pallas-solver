@@ -9,9 +9,6 @@
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-// FIXME: These tests all check for hard-coded values. Ideally, parameters and start estimates should be randomized.
-
-
 #include <stdio.h>
 
 #include "main.h"
@@ -278,7 +275,7 @@ const double chwirut2_functor::m_y[54] = { 92.9000E0 ,57.1000E0 ,31.0500E0 ,11.5
 void testNistChwirut2(void)
 {
   const int n=3;
-  LevenbergMarquardtSpace::Status info;
+  int info;
 
   VectorXd x(n);
 
@@ -613,7 +610,7 @@ const double lanczos1_functor::y[24] = { 2.513400000000E+00 ,2.044333373291E+00 
 void testNistLanczos1(void)
 {
   const int n=6;
-  LevenbergMarquardtSpace::Status info;
+  int info;
 
   VectorXd x(n);
 
@@ -627,7 +624,7 @@ void testNistLanczos1(void)
   info = lm.minimize(x);
 
   // check return value
-  VERIFY_IS_EQUAL(info, LevenbergMarquardtSpace::RelativeErrorTooSmall);
+  VERIFY_IS_EQUAL(info, 2);
   VERIFY_IS_EQUAL(lm.nfev(), 79);
   VERIFY_IS_EQUAL(lm.njev(), 72);
   // check norm^2
@@ -648,7 +645,7 @@ void testNistLanczos1(void)
   info = lm.minimize(x);
 
   // check return value
-  VERIFY_IS_EQUAL(info, LevenbergMarquardtSpace::RelativeErrorTooSmall);
+  VERIFY_IS_EQUAL(info, 2);
   VERIFY_IS_EQUAL(lm.nfev(), 9);
   VERIFY_IS_EQUAL(lm.njev(), 8);
   // check norm^2
@@ -699,7 +696,7 @@ const double rat42_functor::y[9] = { 8.930E0 ,10.800E0 ,18.590E0 ,22.330E0 ,39.3
 void testNistRat42(void)
 {
   const int n=3;
-  LevenbergMarquardtSpace::Status info;
+  int info;
 
   VectorXd x(n);
 
@@ -713,7 +710,7 @@ void testNistRat42(void)
   info = lm.minimize(x);
 
   // check return value
-  VERIFY_IS_EQUAL(info, LevenbergMarquardtSpace::RelativeReductionTooSmall);
+  VERIFY_IS_EQUAL(info, 1);
   VERIFY_IS_EQUAL(lm.nfev(), 10);
   VERIFY_IS_EQUAL(lm.njev(), 8);
   // check norm^2
@@ -731,7 +728,7 @@ void testNistRat42(void)
   info = lm.minimize(x);
 
   // check return value
-  VERIFY_IS_EQUAL(info, LevenbergMarquardtSpace::RelativeReductionTooSmall);
+  VERIFY_IS_EQUAL(info, 1);
   VERIFY_IS_EQUAL(lm.nfev(), 6);
   VERIFY_IS_EQUAL(lm.njev(), 5);
   // check norm^2
@@ -777,7 +774,7 @@ const double MGH10_functor::y[16] = { 3.478000E+04, 2.861000E+04, 2.365000E+04, 
 void testNistMGH10(void)
 {
   const int n=3;
-  LevenbergMarquardtSpace::Status info;
+  int info;
 
   VectorXd x(n);
 
@@ -789,19 +786,17 @@ void testNistMGH10(void)
   MGH10_functor functor;
   LevenbergMarquardt<MGH10_functor> lm(functor);
   info = lm.minimize(x);
-  VERIFY_IS_EQUAL(info, LevenbergMarquardtSpace::RelativeErrorTooSmall);
 
+  // check return value
+  VERIFY_IS_EQUAL(info, 1); 
+  VERIFY_IS_EQUAL(lm.nfev(), 284 ); 
+  VERIFY_IS_EQUAL(lm.njev(), 249 ); 
   // check norm^2
   VERIFY_IS_APPROX(lm.fvec().squaredNorm(), 8.7945855171E+01);
   // check x
   VERIFY_IS_APPROX(x[0], 5.6096364710E-03);
   VERIFY_IS_APPROX(x[1], 6.1813463463E+03);
   VERIFY_IS_APPROX(x[2], 3.4522363462E+02);
-  
-  // check return value
-  //VERIFY_IS_EQUAL(info, 1);
-  VERIFY_IS_EQUAL(lm.nfev(), 284 );
-  VERIFY_IS_EQUAL(lm.njev(), 249 );
 
   /*
    * Second try
@@ -809,19 +804,17 @@ void testNistMGH10(void)
   x<< 0.02, 4000., 250.;
   // do the computation
   info = lm.minimize(x);
-  VERIFY_IS_EQUAL(info, LevenbergMarquardtSpace::RelativeReductionTooSmall);
 
+  // check return value
+  VERIFY_IS_EQUAL(info, 1);
+  VERIFY_IS_EQUAL(lm.nfev(), 126);
+  VERIFY_IS_EQUAL(lm.njev(), 116);
   // check norm^2
   VERIFY_IS_APPROX(lm.fvec().squaredNorm(), 8.7945855171E+01);
   // check x
   VERIFY_IS_APPROX(x[0], 5.6096364710E-03);
   VERIFY_IS_APPROX(x[1], 6.1813463463E+03);
   VERIFY_IS_APPROX(x[2], 3.4522363462E+02);
-  
-  // check return value
-  //VERIFY_IS_EQUAL(info, 1);
-  VERIFY_IS_EQUAL(lm.nfev(), 126);
-  VERIFY_IS_EQUAL(lm.njev(), 116);
 }
 
 
@@ -873,16 +866,15 @@ void testNistBoxBOD(void)
   lm.setFactor(10);
   info = lm.minimize(x);
 
+  // check return value
+  VERIFY_IS_EQUAL(info, 1);
+  VERIFY_IS_EQUAL(lm.nfev(), 31);
+  VERIFY_IS_EQUAL(lm.njev(), 25);
   // check norm^2
   VERIFY_IS_APPROX(lm.fvec().squaredNorm(), 1.1680088766E+03);
   // check x
   VERIFY_IS_APPROX(x[0], 2.1380940889E+02);
   VERIFY_IS_APPROX(x[1], 5.4723748542E-01);
-  
-  // check return value
-  VERIFY_IS_EQUAL(info, 1);
-  VERIFY(lm.nfev() < 31); // 31
-  VERIFY(lm.njev() < 25); // 25
 
   /*
    * Second try
@@ -896,8 +888,8 @@ void testNistBoxBOD(void)
 
   // check return value
   VERIFY_IS_EQUAL(info, 1); 
-  VERIFY_IS_EQUAL(lm.nfev(), 16 );
-  VERIFY_IS_EQUAL(lm.njev(), 15 );
+  VERIFY_IS_EQUAL(lm.nfev(), 15 ); 
+  VERIFY_IS_EQUAL(lm.njev(), 14 ); 
   // check norm^2
   VERIFY_IS_APPROX(lm.fvec().squaredNorm(), 1.1680088766E+03);
   // check x
@@ -956,6 +948,10 @@ void testNistMGH17(void)
   lm.setMaxfev(1000);
   info = lm.minimize(x);
 
+  // check return value
+//   VERIFY_IS_EQUAL(info, 2);  //FIXME Use (lm.info() == Success)
+//   VERIFY_IS_EQUAL(lm.nfev(), 602 ); 
+  VERIFY_IS_EQUAL(lm.njev(), 545 ); 
   // check norm^2
   VERIFY_IS_APPROX(lm.fvec().squaredNorm(), 5.4648946975E-05);
   // check x
@@ -964,11 +960,6 @@ void testNistMGH17(void)
   VERIFY_IS_APPROX(x[2], -1.4646871366E+00);
   VERIFY_IS_APPROX(x[3], 1.2867534640E-02);
   VERIFY_IS_APPROX(x[4], 2.2122699662E-02);
-  
-    // check return value
-//   VERIFY_IS_EQUAL(info, 2);  //FIXME Use (lm.info() == Success)
-  VERIFY(lm.nfev() < 700 ); // 602
-  VERIFY(lm.njev() < 600 ); // 545
 
   /*
    * Second try
@@ -1044,6 +1035,10 @@ void testNistMGH09(void)
   lm.setMaxfev(1000);
   info = lm.minimize(x);
 
+  // check return value
+  VERIFY_IS_EQUAL(info, 1); 
+  VERIFY_IS_EQUAL(lm.nfev(), 490 ); 
+  VERIFY_IS_EQUAL(lm.njev(), 376 ); 
   // check norm^2
   VERIFY_IS_APPROX(lm.fvec().squaredNorm(), 3.0750560385E-04);
   // check x
@@ -1051,10 +1046,6 @@ void testNistMGH09(void)
   VERIFY_IS_APPROX(x[1], 0.19126423573); // should be 1.9128232873E-01
   VERIFY_IS_APPROX(x[2], 0.12305309914); // should be 1.2305650693E-01
   VERIFY_IS_APPROX(x[3], 0.13605395375); // should be 1.3606233068E-01
-  // check return value
-  VERIFY_IS_EQUAL(info, 1); 
-  VERIFY(lm.nfev() < 510 ); // 490
-  VERIFY(lm.njev() < 400 ); // 376
 
   /*
    * Second try
