@@ -2,7 +2,6 @@ var searchData=
 [
   ['scoped_5farray',['scoped_array',['../classpallas_1_1scoped__array.html',1,'pallas']]],
   ['scoped_5fptr',['scoped_ptr',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20gradientcostfunction_20_3e',['scoped_ptr&lt; GradientCostFunction &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
   ['scoped_5fptr_3c_20internal_3a_3acrossoverstrategy_20_3e',['scoped_ptr&lt; internal::CrossoverStrategy &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
   ['scoped_5fptr_3c_20internal_3a_3amutationstrategy_20_3e',['scoped_ptr&lt; internal::MutationStrategy &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
   ['scoped_5fptr_3c_20internal_3a_3arandomnumbergenerator_3c_20double_20_3e_20_3e',['scoped_ptr&lt; internal::RandomNumberGenerator&lt; double &gt; &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
@@ -18,7 +17,7 @@ var searchData=
   ['state',['State',['../structpallas_1_1internal_1_1_state.html',1,'pallas::internal']]],
   ['stepfunction',['StepFunction',['../classpallas_1_1_step_function.html',1,'pallas']]],
   ['summary',['Summary',['../structpallas_1_1_simulated_annealing_1_1_summary.html',1,'pallas::SimulatedAnnealing']]],
+  ['summary',['Summary',['../structpallas_1_1_basinhopping_1_1_summary.html',1,'pallas::Basinhopping']]],
   ['summary',['Summary',['../structpallas_1_1_differential_evolution_1_1_summary.html',1,'pallas::DifferentialEvolution']]],
-  ['summary',['Summary',['../structpallas_1_1_brute_1_1_summary.html',1,'pallas::Brute']]],
-  ['summary',['Summary',['../structpallas_1_1_basinhopping_1_1_summary.html',1,'pallas::Basinhopping']]]
+  ['summary',['Summary',['../structpallas_1_1_brute_1_1_summary.html',1,'pallas::Brute']]]
 ];

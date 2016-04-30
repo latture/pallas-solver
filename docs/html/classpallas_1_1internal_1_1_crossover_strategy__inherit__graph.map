@@ -1,4 +1,4 @@
 <map id="pallas::internal::CrossoverStrategy" name="pallas::internal::CrossoverStrategy">
-<area shape="rect" id="node2" href="$classpallas_1_1internal_1_1_binomial_crossover.html" title="pallas::internal::Binomial\lCrossover" alt="" coords="5,95,179,136"/>
-<area shape="rect" id="node3" href="$classpallas_1_1internal_1_1_exponential_crossover.html" title="pallas::internal::Exponential\lCrossover" alt="" coords="203,95,395,136"/>
+<area shape="rect" id="node2" href="$classpallas_1_1internal_1_1_binomial_crossover.html" title="pallas::internal::Binomial\lCrossover" alt="" coords="5,92,171,131"/>
+<area shape="rect" id="node3" href="$classpallas_1_1internal_1_1_exponential_crossover.html" title="pallas::internal::Exponential\lCrossover" alt="" coords="195,92,379,131"/>
 </map>

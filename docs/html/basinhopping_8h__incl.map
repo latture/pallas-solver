@@ -1,8 +1,8 @@
 <map id="include/pallas/basinhopping.h" name="include/pallas/basinhopping.h">
-<area shape="rect" id="node3" href="$scoped__ptr_8h_source.html" title="pallas/scoped_ptr.h" alt="" coords="191,162,332,189"/>
-<area shape="rect" id="node8" href="$step__function_8h_source.html" title="pallas/step_function.h" alt="" coords="329,80,484,107"/>
-<area shape="rect" id="node9" href="$types_8h_source.html" title="pallas/types.h" alt="" coords="487,162,593,189"/>
-<area shape="rect" id="node16" href="$metropolis_8h_source.html" title="pallas/internal/metropolis.h" alt="" coords="734,80,919,107"/>
-<area shape="rect" id="node18" href="$state_8h_source.html" title="pallas/internal/state.h" alt="" coords="559,80,710,107"/>
-<area shape="rect" id="node13" href="$random__number__generator_8h.html" title="pallas/internal/random\l_number_generator.h" alt="" coords="711,155,870,196"/>
+<area shape="rect" id="node3" href="$scoped__ptr_8h_source.html" title="pallas/scoped_ptr.h" alt="" coords="191,159,328,184"/>
+<area shape="rect" id="node8" href="$step__function_8h_source.html" title="pallas/step_function.h" alt="" coords="327,79,477,104"/>
+<area shape="rect" id="node9" href="$types_8h_source.html" title="pallas/types.h" alt="" coords="480,159,583,184"/>
+<area shape="rect" id="node16" href="$metropolis_8h.html" title="pallas/internal/metropolis.h" alt="" coords="723,79,903,104"/>
+<area shape="rect" id="node18" href="$state_8h_source.html" title="pallas/internal/state.h" alt="" coords="551,79,698,104"/>
+<area shape="rect" id="node13" href="$random__number__generator_8h.html" title="pallas/internal/random\l_number_generator.h" alt="" coords="702,152,854,191"/>
 </map>

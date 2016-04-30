@@ -1,3 +1,5 @@
 <map id="pallas::StepFunction::Step" name="pallas::StepFunction::Step">
-<area shape="rect" id="node2" href="$classpallas_1_1_cooling_schedule.html#a341751858fdb48726a1cab084f261992" title="Estimates an appropriate starting temperature. " alt="" coords="201,5,375,47"/>
+<area shape="rect" id="node2" href="$classpallas_1_1_step_function.html#a4a8ab9a9ce5135a3ce5e9f5cae190e66" title="Destructor. " alt="" coords="207,5,349,44"/>
+<area shape="rect" id="node3" href="$classpallas_1_1_cooling_schedule.html#a341751858fdb48726a1cab084f261992" title="Estimates an appropriate starting temperature. " alt="" coords="195,68,361,107"/>
+<area shape="rect" id="node4" href="$classpallas_1_1_cooling_schedule.html#a8b19f700f186a57f54e96af99cbce566" title="Default destructor. " alt="" coords="409,68,573,107"/>
 </map>

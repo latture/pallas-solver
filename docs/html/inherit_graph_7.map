@@ -1,6 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classpallas_1_1_cooling_schedule.html" title="Determines the rate of cooling within pallas::SimulatedAnnealing. " alt="" coords="5,56,179,83"/>
-<area shape="rect" id="node2" href="$classpallas_1_1_boltzmann_cooling.html" title="Boltzmann cooling schedule. " alt="" coords="227,5,407,32"/>
-<area shape="rect" id="node3" href="$classpallas_1_1_cauchy_cooling.html" title="Cauchy cooling schedule. " alt="" coords="235,56,398,83"/>
-<area shape="rect" id="node4" href="$classpallas_1_1_fast_cooling.html" title="Fast cooling schedule updates. " alt="" coords="246,107,387,133"/>
+<area shape="rect" id="node1" href="$classpallas_1_1_cooling_schedule.html" title="Determines the rate of cooling within pallas::SimulatedAnnealing. " alt="" coords="5,55,170,80"/>
+<area shape="rect" id="node2" href="$classpallas_1_1_boltzmann_cooling.html" title="Boltzmann cooling schedule. " alt="" coords="218,5,390,31"/>
+<area shape="rect" id="node3" href="$classpallas_1_1_cauchy_cooling.html" title="Cauchy cooling schedule. " alt="" coords="227,55,381,80"/>
+<area shape="rect" id="node4" href="$classpallas_1_1_fast_cooling.html" title="Fast cooling schedule updates. " alt="" coords="236,104,371,129"/>
 </map>

@@ -1,10 +1,10 @@
 <map id="src/pallas/internal/random_number_generator.h" name="src/pallas/internal/random_number_generator.h">
-<area shape="rect" id="node2" href="$step__function_8h_source.html" title="include/pallas/step\l_function.h" alt="" coords="57,95,196,136"/>
-<area shape="rect" id="node6" href="$crossover__strategy_8h_source.html" title="src/pallas/internal\l/crossover_strategy.h" alt="" coords="399,95,550,136"/>
-<area shape="rect" id="node8" href="$metropolis_8h_source.html" title="src/pallas/internal\l/metropolis.h" alt="" coords="244,95,375,136"/>
-<area shape="rect" id="node9" href="$shuffler_8h_source.html" title="src/pallas/internal\l/shuffler.h" alt="" coords="575,95,705,136"/>
-<area shape="rect" id="node3" href="$basinhopping_8h.html" title="include/pallas/basinhopping.h" alt="" coords="206,191,413,218"/>
-<area shape="rect" id="node4" href="$cooling__schedule_8h.html" title="include/pallas/cooling\l_schedule.h" alt="" coords="24,184,181,225"/>
-<area shape="rect" id="node5" href="$simulated__annealing_8h_source.html" title="include/pallas/simulated\l_annealing.h" alt="" coords="17,273,188,315"/>
-<area shape="rect" id="node7" href="$differential__evolution_8h.html" title="include/pallas/differential\l_evolution.h" alt="" coords="521,184,695,225"/>
+<area shape="rect" id="node2" href="$step__function_8h_source.html" title="include/pallas/step\l_function.h" alt="" coords="54,92,185,131"/>
+<area shape="rect" id="node6" href="$crossover__strategy_8h_source.html" title="src/pallas/internal\l/crossover_strategy.h" alt="" coords="380,92,528,131"/>
+<area shape="rect" id="node8" href="$metropolis_8h.html" title="src/pallas/internal\l/metropolis.h" alt="" coords="232,92,357,131"/>
+<area shape="rect" id="node9" href="$shuffler_8h_source.html" title="src/pallas/internal\l/shuffler.h" alt="" coords="552,92,677,131"/>
+<area shape="rect" id="node3" href="$basinhopping_8h.html" title="include/pallas/basinhopping.h" alt="" coords="196,185,392,211"/>
+<area shape="rect" id="node4" href="$cooling__schedule_8h.html" title="include/pallas/cooling\l_schedule.h" alt="" coords="24,179,172,217"/>
+<area shape="rect" id="node5" href="$simulated__annealing_8h_source.html" title="include/pallas/simulated\l_annealing.h" alt="" coords="17,265,180,304"/>
+<area shape="rect" id="node7" href="$differential__evolution_8h.html" title="include/pallas/differential\l_evolution.h" alt="" coords="499,179,666,217"/>
 </map>
