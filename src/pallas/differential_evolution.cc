@@ -170,7 +170,7 @@ namespace pallas {
         double trial_energy;
         Vector trial(num_parameters_);
         while (true) {
-            scale = (*random_dither_)();
+            scale_ = (*random_dither_)();
 
             for (unsigned int i = 0; i < population_size_; ++i) {
                 trial = population_[i];
@@ -258,7 +258,7 @@ namespace pallas {
                                                               << " does not have the length as the number of parameters.";
         lower_bounds_ = options.lower_bounds;
 
-        scale = (*random_number_)();
+        scale_ = (*random_number_)();
 
         scale_arg1_ = upper_bounds_ + lower_bounds_;
         scale_arg1_ *= 0.5;
@@ -393,7 +393,7 @@ namespace pallas {
         crossover_strategy_->Crossover(candidate, mutation_strategy_->get_bprime(population_,
                                                                                  idx,
                                                                                  population_idx_.data(),
-                                                                                 scale));
+                                                                                 scale_));
     };
 
     bool DifferentialEvolution::check_for_termination_(const DifferentialEvolution::Options& options,
