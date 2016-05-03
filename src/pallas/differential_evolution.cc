@@ -180,7 +180,7 @@ namespace pallas {
                 t1 = WallTimeInSeconds();
                 if (!Evaluate(problem, scaled_trial, &trial_energy, &global_summary->message)) {
                     global_summary->termination_type = TerminationType::FAILURE;
-                    global_summary->message = "Initial cost evaluation failed. "
+                    global_summary->message = "Cost evaluation failed. "
                                                       "More details: " + global_summary->message;
                     LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
                 }
