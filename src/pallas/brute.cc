@@ -151,35 +151,38 @@ namespace pallas {
                 global_summary->message = "Initial cost and jacobian evaluation failed. "
                                                   "More details: " + global_summary->message;
                 LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+                return;
             }
             global_minimum_state.update(current_state);
         }
         global_summary->cost_evaluation_time_in_seconds = WallTimeInSeconds() - t1;
 
-        t1 = WallTimeInSeconds();
         if(options.polish_output) {
+            t1 = WallTimeInSeconds();
             GradientLocalMinimizer local_minimizer;
             local_minimizer.Solve(options.local_minimizer_options,
                                   problem,
                                   global_minimum_state.x.data(),
                                   &global_summary->local_minimization_summary);
+            global_summary->local_minimization_time_in_seconds = WallTimeInSeconds() - t1;
+
+            t1 = WallTimeInSeconds();
+            if (!Evaluate(problem, global_minimum_state.x, &global_minimum_state, &global_summary->message)) {
+                global_summary->termination_type = TerminationType::FAILURE;
+                global_summary->message = "Cost evaluation of global minimum state failed after polishing step "
+                                                  "More details: " + global_summary->message;
+                LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+                return;
+            }
+            global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
             global_summary->was_polished = true;
         }
-        global_summary->local_minimization_time_in_seconds = WallTimeInSeconds() - t1;
-        t1 = WallTimeInSeconds();
-        if (!Evaluate(problem, global_minimum_state.x, &global_minimum_state, &global_summary->message)) {
-            global_summary->termination_type = TerminationType::FAILURE;
-            global_summary->message = "Cost evaluation of global mininum state failed after polishing step "
-                                              "More details: " + global_summary->message;
-            LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
-        }
-        global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
-        global_summary->final_cost = global_minimum_state.cost;
-
-        x = global_minimum_state.x;
 
         global_summary->message = "Specified search of parameter space successfully completed.";
         global_summary->termination_type = TerminationType::USER_SUCCESS;
+        global_summary->final_cost = global_minimum_state.cost;
+
+        x = global_minimum_state.x;
         global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
     };
 
