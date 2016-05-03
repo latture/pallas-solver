@@ -51,7 +51,7 @@ namespace pallas {
 
     /**
      * @brief Minimizes an objective function by sequentially hopping between minima in the objective's energy landscape.
-     * @details Basin-hopping is a stochastic algorithm which attempts to find the global minimum of a smooth scalar function 
+     * @details Basin-hopping is a stochastic algorithm which attempts to find the global minimum of a smooth scalar function
      * of one or more variables. The algorithm in its current form was described by David Wales and Jonathan Doye http://www-wales.ch.cam.ac.uk/.\n
 
       The algorithm is iterative with each cycle composed of the following features\n
@@ -146,10 +146,10 @@ namespace pallas {
 
             /**
              * @brief Convenience function for changing the default step function.
-             * @details This function simply swaps the scoped_ptr to the user 
+             * @details This function simply swaps the scoped_ptr to the user
              * defined `StepFunction` with the scoped_ptr to the `StepFunction`
              * held within the `pallas::Basinhopping::Options` struct.
-             * 
+             *
              * @param user_step_function pallas::scoped_ptr<pallas::StepFunction>. This function generates randomized candidate solutions based on the current position.
              */
             void set_step_function(scoped_ptr<StepFunction>& user_step_function) {
@@ -191,24 +191,28 @@ namespace pallas {
              * @brief Contains a summary of the optimization.
              * @details This struct contains the result of the optimization and has convenience methods for printing reports of a completed optimization.
              */
+        /**
+         * @brief Contains a summary of the optimization.
+         * @details This struct contains the result of the optimization and has convenience methods for printing reports of a completed optimization.
+         */
         struct Summary {
             /**
              * @brief Default constructor
              */
             Summary();
             std::string BriefReport() const;/**<A brief one line description of the state of the solver after termination.*/
- 
+
             std::string FullReport() const;/**<A full multi-line description of the state of the solver after termination.*/
 
             // Minimizer summary -------------------------------------------------
             LineSearchDirectionType line_search_direction_type;/**<Method to find the next search direction. Valid options are `STEEPEST_DESCENT`, `NONLINEAR_CONJUGATE_GRADIENT`, `LBFGS`, or `BFGS`*/
 
             TerminationType termination_type;/**<Reason optimization was terminated*/
- 
+
             std::string message;/**<Message describing why the solver terminated.*/
 
             double initial_cost;/**<Cost of the problem (value of the objective function) before the optimization.*/
- 
+
             double final_cost;/**<Cost of the problem (value of the objective function) after the optimization.*/
 
             GradientLocalMinimizer::Summary local_minimization_summary;/**<Summary from the last local minimization iteration.*/
@@ -236,7 +240,7 @@ namespace pallas {
          * @details The specified options are used to setup a basinhopping instance which
          * is then used to minimize the GradientProblem. The optimal solution is stored
          * in `parameters` and a summary of the global optimization can be found in `summary`.
-         * 
+         *
          * @param options pallas::Basinhopping::Options. Options used to configure the optimization.
          * @param problem pallas::GradientProblem. The problem to optimize.
          * @param parameters double*. The starting point for further optimization.
@@ -250,11 +254,11 @@ namespace pallas {
     private:
         /**
          * @brief Checks to see if any termination conditions were met.
-         * 
+         *
          * @param options pallas::Basinhopping::Options. Options used to configure the optimization.
          * @param message std::string*. If a termination condition is met, a message describing the satisfied condition is stored in the variable.
          * @param termination_type pallas::TerminationType*. This
-         * @return Returns `true` if a termination condition was meet, `false` otherwise. 
+         * @return Returns `true` if a termination condition was meet, `false` otherwise.
          */
         bool check_for_termination_(const Basinhopping::Options &options,
                                     std::string* message,
@@ -263,7 +267,7 @@ namespace pallas {
          * @brief Updates the global summary before exiting the basinhopping algorithm.
          */
         void prepare_final_summary_(Basinhopping::Summary* global_summary,
-                                   const GradientLocalMinimizer::Summary& local_summary);
+                                    const GradientLocalMinimizer::Summary& local_summary);
 
         internal::Metropolis metropolis_;/**<Determines whether to accept a higher cost candidate solution*/
         internal::State current_state_;/**<The current state of the optimization*/
@@ -280,7 +284,7 @@ namespace pallas {
      * @details The specified options are used to setup a basinhopping instance which
      * is then used to minimize the GradientProblem. The optimal solution is stored
      * in `parameters` and a summary of the global optimization can be found in `summary`.
-     * 
+     *
      * @param options pallas::Basinhopping::Options. Options used to configure the optimization.
      * @param problem pallas::GradientProblem. The problem to optimize.
      * @param parameters double*. The starting point for further optimization.
