@@ -48,16 +48,16 @@ namespace pallas {
                       internal::State *state,
                       std::string *message) {
             if (!problem.Evaluate(x.data(),
-                                   &(state->cost),
-                                   state->gradient.data())) {
+                                  &(state->cost),
+                                  state->gradient.data())) {
                 *message = "Gradient evaluation failed.";
                 return false;
             }
             Vector negative_gradient = -state->gradient;
             Vector projected_gradient_step(x.size());
             if (!problem.Plus(x.data(),
-                               negative_gradient.data(),
-                               projected_gradient_step.data())) {
+                              negative_gradient.data(),
+                              projected_gradient_step.data())) {
                 *message = "projected_gradient_step = Plus(x, -gradient) failed.";
                 return false;
             }
