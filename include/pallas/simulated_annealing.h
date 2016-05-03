@@ -301,15 +301,15 @@ namespace pallas {
         void prepare_final_summary_(SimulatedAnnealing::Summary *global_summary,
                                     const GradientLocalMinimizer::Summary &local_summary);
 
-        scoped_ptr<CoolingSchedule> cooling_schedule;
+        scoped_ptr<CoolingSchedule> cooling_schedule_;/**<Responsible for updating the temperature of the system. Higher temperatures make accepting a worse candidate solution more likely.*/
 
-        internal::Metropolis metropolis;/**<Determines whether to accept a higher cost candidate solution*/
-        internal::State current_state;/**<The current state of the optimization*/
-        internal::State candidate_state;/**<A randomized candidate solution that is then minimized using a local minimization algorithm and compared to the current state.*/
-        internal::State global_minimum_state;/**The best solution found during any stage of the optimization. It is this value that is returned when minimization concludes.*/
+        internal::Metropolis metropolis_;/**<Determines whether to accept a higher cost candidate solution*/
+        internal::State current_state_;/**<The current state of the optimization*/
+        internal::State candidate_state_;/**<A randomized candidate solution that is then minimized using a local minimization algorithm and compared to the current state.*/
+        internal::State global_minimum_state_;/**The best solution found during any stage of the optimization. It is this value that is returned when minimization concludes.*/
 
-        unsigned int num_iterations;/**<The number of local optimization iterations the global optimizer has performed.*/
-        unsigned int num_stagnant_iterations;/**<The number of iterations which has elapsed without finding a new global minimum.*/
+        unsigned int num_iterations_;/**<The number of local optimization iterations the global optimizer has performed.*/
+        unsigned int num_stagnant_iterations_;/**<The number of iterations which has elapsed without finding a new global minimum.*/
     };
 
     /**

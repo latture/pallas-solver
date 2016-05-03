@@ -136,8 +136,8 @@ namespace pallas {
         double start_time = WallTimeInSeconds();
         double t1;
         unsigned int dwell_iter;
-        num_iterations = 0;
-        num_stagnant_iterations = 0;
+        num_iterations_ = 0;
+        num_stagnant_iterations_ = 0;
 
         bool is_not_silent = !options.is_silent;
 
@@ -148,32 +148,32 @@ namespace pallas {
 
         VectorRef x(parameters, num_parameters);
 
-        current_state = internal::State(num_parameters);
-        current_state.x = x;
+        current_state_ = internal::State(num_parameters);
+        current_state_.x = x;
 
         t1 = WallTimeInSeconds();
-        if (!Evaluate(problem, current_state.x, &current_state, &global_summary->message)) {
+        if (!Evaluate(problem, current_state_.x, &current_state_, &global_summary->message)) {
             global_summary->termination_type = TerminationType::FAILURE;
             global_summary->message = "Initial cost and jacobian evaluation failed. "
                                               "More details: " + global_summary->message;
             LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
         }
-        ++num_iterations;
+        ++num_iterations_;
         global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
 
-        global_summary->initial_cost = current_state.cost;
+        global_summary->initial_cost = current_state_.cost;
 
         scoped_ptr<CoolingSchedule> __cooling_schedule(
                 CoolingSchedule::Create(options.cooling_schedule_options));
 
-        swap(cooling_schedule, __cooling_schedule);
+        swap(cooling_schedule_, __cooling_schedule);
 
-        if(cooling_schedule->get_initial_temperature() < 0.0) {
-            cooling_schedule->calc_start_temperature(problem, current_state, options.step_function.get());
+        if(cooling_schedule_->get_initial_temperature() < 0.0) {
+            cooling_schedule_->calc_start_temperature(problem, current_state_, options.step_function.get());
         }
 
-        candidate_state = current_state;
-        global_minimum_state = current_state;
+        candidate_state_ = current_state_;
+        global_minimum_state_ = current_state_;
 
         GradientLocalMinimizer::Summary local_summary;
 
@@ -185,11 +185,11 @@ namespace pallas {
         while (true) {
             for(dwell_iter = 0; dwell_iter < options.dwell_iterations; ++dwell_iter) {
                 t1 = WallTimeInSeconds();
-                options.step_function->Step(candidate_state.x.data(), num_parameters);
+                options.step_function->Step(candidate_state_.x.data(), num_parameters);
                 global_summary->step_time_in_seconds += WallTimeInSeconds() - t1;
 
                 t1 = WallTimeInSeconds();
-                if (!Evaluate(problem, candidate_state.x, &candidate_state, &global_summary->message)) {
+                if (!Evaluate(problem, candidate_state_.x, &candidate_state_, &global_summary->message)) {
                     global_summary->termination_type = TerminationType::FAILURE;
                     global_summary->message = "Cost evaluation of candidate state failed "
                                                       "More details: " + global_summary->message;
@@ -197,18 +197,18 @@ namespace pallas {
                 }
                 global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
 
-                if (metropolis(candidate_state.cost, current_state.cost)) {
-                    current_state = candidate_state;
-                    if (global_minimum_state.update(current_state)) {
-                        num_stagnant_iterations = 0;
+                if (metropolis_(candidate_state_.cost, current_state_.cost)) {
+                    current_state_ = candidate_state_;
+                    if (global_minimum_state_.update(current_state_)) {
+                        num_stagnant_iterations_ = 0;
                     } else {
-                        ++num_stagnant_iterations;
+                        ++num_stagnant_iterations_;
                     }
                 }
             }
 
-            cooling_schedule->update_temperature();
-            ++num_iterations;
+            cooling_schedule_->update_temperature();
+            ++num_iterations_;
 
             if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
                 t1 = WallTimeInSeconds();
@@ -217,14 +217,14 @@ namespace pallas {
                     GradientLocalMinimizer local_minimizer;
                     local_minimizer.Solve(options.local_minimizer_options,
                                           problem,
-                                          global_minimum_state.x.data(),
+                                          global_minimum_state_.x.data(),
                                           &local_summary);
                     global_summary->was_polished = true;
                 }
                 global_summary->local_minimization_time_in_seconds = WallTimeInSeconds() - t1;
 
                 t1 = WallTimeInSeconds();
-                if (!Evaluate(problem, global_minimum_state.x, &global_minimum_state, &global_summary->message)) {
+                if (!Evaluate(problem, global_minimum_state_.x, &global_minimum_state_, &global_summary->message)) {
                     global_summary->termination_type = TerminationType::FAILURE;
                     global_summary->message = "Cost evaluation of global mininum state failed after polishing step "
                                                       "More details: " + global_summary->message;
@@ -234,9 +234,9 @@ namespace pallas {
                 global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 prepare_final_summary_(global_summary, local_summary);
                 if (internal::IsSolutionUsable(global_summary)||internal::IsSolutionUsable(local_summary)) {
-                    x = global_minimum_state.x;
+                    x = global_minimum_state_.x;
                 }
-                break;
+                return;
             }
         }
     };
@@ -245,21 +245,21 @@ namespace pallas {
                                 std::string *message,
                                 TerminationType * termination_type) {
 
-        if (global_minimum_state.cost < options.minimum_cost) {
+        if (global_minimum_state_.cost < options.minimum_cost) {
             *message = "Prescribed minimum cost reached.";
             *termination_type = TerminationType::USER_SUCCESS;
             return true;
-        } else if (num_iterations >= options.max_iterations) {
+        } else if (num_iterations_ >= options.max_iterations) {
             *message = "Maximum number of iterations reached.";
             *termination_type = TerminationType::NO_CONVERGENCE;
             return true;
-        } else if (num_stagnant_iterations >= options.max_stagnant_iterations) {
+        } else if (num_stagnant_iterations_ >= options.max_stagnant_iterations) {
             *message = "Maximum number of stagnant iterations reached.";
             *termination_type = TerminationType::CONVERGENCE;
             return true;
-        } else if (cooling_schedule->get_temperature() < options.cooling_schedule_options.final_temperature) {
+        } else if (cooling_schedule_->get_temperature() < options.cooling_schedule_options.final_temperature) {
             *message = "Minimum temperature reached reached.";
-            if (std::abs(current_state.cost - global_minimum_state.cost) > 1.0e-8) {
+            if (std::abs(current_state_.cost - global_minimum_state_.cost) > 1.0e-8) {
                 *message += " WARNING: Cooled to final state, but this was not the smallest configuration found.";
                 *termination_type = TerminationType::NO_CONVERGENCE;
             } else {
@@ -272,8 +272,8 @@ namespace pallas {
 
     void SimulatedAnnealing::prepare_final_summary_(SimulatedAnnealing::Summary *global_summary,
                                 const GradientLocalMinimizer::Summary &local_summary) {
-        global_summary->final_cost = global_minimum_state.cost;
-        global_summary->num_iterations = num_iterations;
+        global_summary->final_cost = global_minimum_state_.cost;
+        global_summary->num_iterations = num_iterations_;
         global_summary->local_minimization_summary = local_summary;
     };
 
