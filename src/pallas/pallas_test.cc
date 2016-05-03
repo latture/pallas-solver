@@ -30,8 +30,6 @@
 #include "pallas/brute.h"
 #include "pallas/differential_evolution.h"
 #include "pallas/simulated_annealing.h"
-#include "pallas/scoped_ptr.h"
-#include "pallas/internal/metropolis.h"
 #include "pallas/internal/test_functions.h"
 
 namespace pallas {
