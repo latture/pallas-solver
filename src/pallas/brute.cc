@@ -156,14 +156,13 @@ namespace pallas {
         }
         global_summary->cost_evaluation_time_in_seconds = WallTimeInSeconds() - t1;
 
-        GradientLocalMinimizer::Summary local_summary;
         t1 = WallTimeInSeconds();
         if(options.polish_output) {
             GradientLocalMinimizer local_minimizer;
             local_minimizer.Solve(options.local_minimizer_options,
                                   problem,
                                   global_minimum_state.x.data(),
-                                  &local_summary);
+                                  &global_summary->local_minimization_summary);
             global_summary->was_polished = true;
         }
         global_summary->local_minimization_time_in_seconds = WallTimeInSeconds() - t1;
