@@ -172,6 +172,8 @@ namespace pallas {
             global_summary->message = "Initial cost and jacobian evaluation failed. "
                                               "More details: " + global_summary->message;
             LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+            prepare_final_summary_(global_summary, local_summary);
+            return;
         }
 
         global_summary->initial_cost = current_state_.cost;
@@ -204,6 +206,8 @@ namespace pallas {
             global_summary->message = "Initial cost and jacobian evaluation failed. "
                                               "More details: " + global_summary->message;
             LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+            prepare_final_summary_(global_summary, local_summary);
+            return;
         }
         global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
 
@@ -241,6 +245,8 @@ namespace pallas {
                 global_summary->message = "Cost and jacobian evaluation failed. "
                                                   "More details: " + global_summary->message;
                 LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+                prepare_final_summary_(global_summary, local_summary);
+                return;
             }
             global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
 
