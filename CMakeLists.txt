@@ -27,6 +27,8 @@ check_dir_exists(${EIGEN_SUBDIR})
 check_dir_exists(${GTEST_SUBDIR})
 check_dir_exists(${FIND_GLOG_SUBDIR})
 
+set(EIGEN_INCLUDE_DIR ${EIGEN_SUBDIR})
+
 find_package(Ceres REQUIRED)
 find_package(Glog REQUIRED)
 
