@@ -181,7 +181,6 @@ namespace pallas {
         global_summary->message = "Specified search of parameter space successfully completed.";
         global_summary->termination_type = TerminationType::USER_SUCCESS;
         global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
-
     };
 
     std::vector<Vector> Brute::expand_parameter_ranges_(
