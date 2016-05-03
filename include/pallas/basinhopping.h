@@ -51,7 +51,7 @@ namespace pallas {
 
     /**
      * @brief Minimizes an objective function by sequentially hopping between minima in the objective's energy landscape.
-     * @details Basin-hopping is a stochastic algorithm which attempts to find the global minimum of a smooth scalar function
+     * @details Basin-hopping is a stochastic algorithm that attempts to find the global minimum of a smooth scalar function
      * of one or more variables. The algorithm in its current form was described by David Wales and Jonathan Doye http://www-wales.ch.cam.ac.uk/.\n
 
       The algorithm is iterative with each cycle composed of the following features\n
@@ -274,13 +274,13 @@ namespace pallas {
         internal::State candidate_state_;/**<A randomized candidate solution that is then minimized using a local minimization algorithm and compared to the current state.*/
         internal::State global_minimum_state_;/**The best solution found during any stage of the optimization. It is this value that is returned when minimization concludes.*/
 
-        unsigned int num_stagnant_iterations_;/**<The number of iterations which has elapsed without finding a new global minimum.*/
+        unsigned int num_stagnant_iterations_;/**<The number of iterations that have elapsed without finding a new global minimum.*/
         unsigned int num_iterations_;/**<The number of local optimization iterations the global optimizer has performed.*/
 
     };
 
     /**
-     * @brief Helper function which avoids going through the interface of the pallas::Basinhopping class.
+     * @brief Helper function that avoids going through the interface of the pallas::Basinhopping class.
      * @details The specified options are used to setup a basinhopping instance which
      * is then used to minimize the GradientProblem. The optimal solution is stored
      * in `parameters` and a summary of the global optimization can be found in `summary`.
