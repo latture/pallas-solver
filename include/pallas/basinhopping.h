@@ -221,11 +221,13 @@ namespace pallas {
 
             unsigned int num_iterations;/**<Number of basinhopping iterations*/
 
-            double total_time_in_seconds;/**<total time elapsed in global minimizer*/
+            double total_time_in_seconds;/**<Total time elapsed in global minimization*/
 
-            double local_minimization_time_in_seconds;/**<time spent in local minimizer*/
+            double local_minimization_time_in_seconds;/**<Time elapsed in local minimization*/
 
-            double step_time_in_seconds;/**<time spent calling step function*/
+            double step_time_in_seconds;/**<Time spent calling the step function*/
+
+            double cost_evaluation_time_in_seconds;/**<Time spent evaluating cost function (outside local minimization)*/
 
             double cost_evaluation_time_in_seconds;/**<time spent evaluating cost function (outside local minimization)*/
         };
