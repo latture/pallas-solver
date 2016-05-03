@@ -153,57 +153,43 @@ namespace pallas {
         bool is_not_silent = !options.is_silent;
         bool new_global_min = false;
         bool accept;
-        num_iterations = 0;
-        num_stagnant_iterations = 0;
+        num_iterations_ = 0;
+        num_stagnant_iterations_ = 0;
 
         const unsigned int num_parameters = static_cast<unsigned int>(problem.NumParameters());
         VectorRef x(parameters, num_parameters);
 
         global_summary->num_parameters = num_parameters;
 
-        current_state = internal::State(num_parameters);
-        current_state.x = x;
+        current_state_ = internal::State(num_parameters);
+        current_state_.x = x;
+
+        GradientLocalMinimizer::Summary local_summary;
 
         // evaluate problem with initial parameters
-        if (!Evaluate(problem, current_state.x, &current_state, &global_summary->message)) {
+        if (!Evaluate(problem, current_state_.x, &current_state_, &global_summary->message)) {
             global_summary->termination_type = TerminationType::FAILURE;
             global_summary->message = "Initial cost and jacobian evaluation failed. "
                                               "More details: " + global_summary->message;
             LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
         }
 
-        global_summary->initial_cost = current_state.cost;
+        global_summary->initial_cost = current_state_.cost;
 
         t1 = WallTimeInSeconds();
         // minimize problem with initial parameters
-        GradientLocalMinimizer::Summary local_summary;
         GradientLocalMinimizer local_minimizer;
         local_minimizer.Solve(options.local_minimizer_options,
                               problem,
-                              current_state.x.data(),
+                              current_state_.x.data(),
                               &local_summary);
 
         global_summary->local_minimization_time_in_seconds += WallTimeInSeconds() - t1;
 
         // check the minimization exited without failure and update state
         // variables if so.
-        if (local_summary.termination_type != TerminationType::FAILURE &&
-            local_summary.termination_type != TerminationType::USER_FAILURE) {
-            // evalulute function at new position to get cost
-            t1 = WallTimeInSeconds();
-            if (!Evaluate(problem, current_state.x, &current_state, &global_summary->message)) {
-                global_summary->termination_type = TerminationType::FAILURE;
-                global_summary->message = "Initial cost and jacobian evaluation failed. "
-                                                  "More details: " + global_summary->message;
-                LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
-            } else {
-                ++num_iterations;
-                // initialize values of remaining state variables with current state
-                candidate_state = current_state;
-                global_minimum_state = current_state;
-            }
-            global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
-        } else {
+        if (local_summary.termination_type == TerminationType::FAILURE ||
+            local_summary.termination_type == TerminationType::USER_FAILURE) {
             global_summary->termination_type = TerminationType::FAILURE;
             global_summary->message = "Initial local minimization iteration failed."
                                               "More details: " + local_summary.message;
@@ -212,31 +198,45 @@ namespace pallas {
             return;
         }
 
+        t1 = WallTimeInSeconds();
+        if (!Evaluate(problem, current_state_.x, &current_state_, &global_summary->message)) {
+            global_summary->termination_type = TerminationType::FAILURE;
+            global_summary->message = "Initial cost and jacobian evaluation failed. "
+                                              "More details: " + global_summary->message;
+            LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+        }
+        global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
+
+        ++num_iterations_;
+        // initialize values of remaining state variables with current state
+        candidate_state_ = current_state_;
+        global_minimum_state_ = current_state_;
+
         // check that initial minimization didn't satisfy termination conditions
         // before entering main loop
         if (check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
             prepare_final_summary_(global_summary, local_summary);
             if (internal::IsSolutionUsable(global_summary))
-                x = global_minimum_state.x;
+                x = global_minimum_state_.x;
             return;
         }
 
         // start main loop
         while (true) {
             t1 = WallTimeInSeconds();
-            options.step_function->Step(candidate_state.x.data(), num_parameters);
+            options.step_function->Step(candidate_state_.x.data(), num_parameters);
             global_summary->step_time_in_seconds += WallTimeInSeconds() - t1;
 
             t1 = WallTimeInSeconds();
             GradientLocalMinimizer::Summary local_summary;
             local_minimizer.Solve(options.local_minimizer_options,
                                   problem,
-                                  candidate_state.x.data(),
+                                  candidate_state_.x.data(),
                                   &local_summary);
             global_summary->local_minimization_time_in_seconds += WallTimeInSeconds() - t1;
 
             t1 = WallTimeInSeconds();
-            if (!Evaluate(problem, candidate_state.x, &candidate_state, &global_summary->message)) {
+            if (!Evaluate(problem, candidate_state_.x, &candidate_state_, &global_summary->message)) {
                 global_summary->termination_type = TerminationType::FAILURE;
                 global_summary->message = "Cost and jacobian evaluation failed. "
                                                   "More details: " + global_summary->message;
@@ -244,26 +244,25 @@ namespace pallas {
             }
             global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
 
-            accept = metropolis(candidate_state.cost, current_state.cost);
+            accept = metropolis_(candidate_state_.cost, current_state_.cost);
 
             if (accept) {
-                current_state = candidate_state;
-
-                new_global_min = global_minimum_state.update(current_state);
+                current_state_ = candidate_state_;
+                new_global_min = global_minimum_state_.update(current_state_);
             }
 
             if (new_global_min) {
-                num_stagnant_iterations = 0;
+                num_stagnant_iterations_ = 0;
             } else {
-                ++num_stagnant_iterations;
+                ++num_stagnant_iterations_;
             }
 
-            ++num_iterations;
+            ++num_iterations_;
 
             if (check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
                 prepare_final_summary_(global_summary, local_summary);
                 if (internal::IsSolutionUsable(global_summary))
-                    x = global_minimum_state.x;
+                    x = global_minimum_state_.x;
 
                 global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 return;
@@ -275,15 +274,15 @@ namespace pallas {
     bool Basinhopping::check_for_termination_(const Basinhopping::Options &options,
                                               std::string *message,
                                               TerminationType *termination_type) {
-        if (global_minimum_state.cost < options.minimum_cost) {
+        if (global_minimum_state_.cost < options.minimum_cost) {
             *message = "Prescribed minimum cost reached.";
             *termination_type = TerminationType::USER_SUCCESS;
             return true;
-        } else if (num_iterations >= options.max_iterations) {
+        } else if (num_iterations_ >= options.max_iterations) {
             *message = "Maximum number of iterations reached.";
             *termination_type = TerminationType::NO_CONVERGENCE;
             return true;
-        } else if (num_stagnant_iterations >= options.max_stagnant_iterations) {
+        } else if (num_stagnant_iterations_ >= options.max_stagnant_iterations) {
             *message = "Maximum number of stagnant iterations reached.";
             *termination_type = TerminationType::CONVERGENCE;
             return true;
@@ -294,8 +293,8 @@ namespace pallas {
 
     void Basinhopping::prepare_final_summary_(Basinhopping::Summary *global_summary,
                                               const GradientLocalMinimizer::Summary &local_summary) {
-        global_summary->final_cost = global_minimum_state.cost;
-        global_summary->num_iterations = num_iterations;
+        global_summary->final_cost = global_minimum_state_.cost;
+        global_summary->num_iterations = num_iterations_;
         global_summary->local_minimization_summary = local_summary;
     }
 
@@ -306,5 +305,4 @@ namespace pallas {
         Basinhopping solver;
         solver.Solve(options, problem, parameters, summary);
     }
-
 } // namespace pallas
