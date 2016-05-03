@@ -252,7 +252,7 @@ namespace pallas {
          * @param expanded_ranges std::vector<Vector>. Contains linearly spaced vectors of all sample points for the input parameter ranges. Used internally on the result of Brute::expand_parameter_ranges_.
          * @return All possible permutations of the input parameter ranges. Because all permutations are precalculated this could be memory intensive if a large number of parameters and sample points are provided.
          */
-        std::vector<Vector> build_permuations_(const std::vector<Vector> &expanded_ranges);
+        std::vector<Vector> build_permutations_(const std::vector<Vector> &expanded_ranges);
     };
 
     /**

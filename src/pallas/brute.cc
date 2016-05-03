@@ -133,7 +133,7 @@ namespace pallas {
         t1 = WallTimeInSeconds();
         std::vector<Vector> expanded_ranges = expand_parameter_ranges_(parameter_ranges);
 
-        std::vector<Vector> permutations = build_permuations_(expanded_ranges);
+        std::vector<Vector> permutations = build_permutations_(expanded_ranges);
         global_summary->permutation_build_time_in_seconds = WallTimeInSeconds() - t1;
 
         global_summary->num_parameters = num_parameters;
@@ -204,7 +204,7 @@ namespace pallas {
         return expanded_ranges;
     }
 
-    std::vector<Vector> Brute::build_permuations_(
+    std::vector<Vector> Brute::build_permutations_(
             const std::vector<Vector> &expanded_ranges) {
 
         const unsigned int num_parameters = static_cast<unsigned int>(expanded_ranges.size());
