@@ -240,9 +240,8 @@ namespace pallas {
                 global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
                 global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 prepare_final_summary_(global_summary, local_summary);
-                if (internal::IsSolutionUsable(global_summary)||internal::IsSolutionUsable(local_summary)) {
+                if (internal::IsSolutionUsable(global_summary) || internal::IsSolutionUsable(local_summary))
                     x = global_minimum_state_.x;
-                }
                 return;
             }
         }
