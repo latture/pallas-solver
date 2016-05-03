@@ -144,7 +144,7 @@ namespace pallas {
         global_minimum_state.cost = DBL_MAX;
 
         t1 = WallTimeInSeconds();
-        for (unsigned long i = 0; i < permutations.size(); ++i) {
+        for (unsigned int i = 0; i < permutations.size(); ++i) {
             current_state.x = permutations[i];
             if (!Evaluate(problem, current_state.x, &current_state, &global_summary->message)) {
                 global_summary->termination_type = TerminationType::FAILURE;
@@ -154,6 +154,9 @@ namespace pallas {
                 return;
             }
             global_minimum_state.update(current_state);
+
+            if (options.history_save_frequency > 0 && i % options.history_save_frequency == 0)
+                global_summary->history.push_back(HistoryOutput(i, current_state.x, global_minimum_state.cost, global_minimum_state.x));
         }
         global_summary->cost_evaluation_time_in_seconds = WallTimeInSeconds() - t1;
 
@@ -266,6 +269,30 @@ namespace pallas {
                Brute::Summary *global_summary) {
         Brute solver;
         solver.Solve(options, problem, parameter_ranges, parameters, global_summary);
+    }
+
+    void dump(const Brute::HistoryOutput &h, HistoryWriter& writer) {
+        writer.StartObject();
+        writer.String("iteration_number");
+        writer.Uint(h.iteration_number);
+
+        writer.String("current_solution");
+        writer.StartArray();
+        for (auto i = 0; i < h.current_solution.size(); ++i)  {
+            writer.Double(h.current_solution[i]);
+        }
+        writer.EndArray();
+
+        writer.String("best_cost");
+        writer.Double(h.best_cost);
+
+        writer.String("best_solution");
+        writer.StartArray();
+        for (auto i = 0; i < h.best_solution.size(); ++i)  {
+            writer.Double(h.best_solution[i]);
+        }
+        writer.EndArray();
+        writer.EndObject();
     }
 
 } // namespace pallas

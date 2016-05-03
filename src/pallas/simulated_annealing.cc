@@ -179,6 +179,9 @@ namespace pallas {
         candidate_state_ = current_state_;
         global_minimum_state_ = current_state_;
 
+        if (options.history_save_frequency > 0)
+            global_summary->history.push_back(HistoryOutput(num_iterations_, num_stagnant_iterations_, cooling_schedule_->get_temperature(), current_state_.x, current_state_.cost, current_state_.x));
+
         if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
             prepare_final_summary_(global_summary, local_summary);
             if (internal::IsSolutionUsable(global_summary))
@@ -214,8 +217,11 @@ namespace pallas {
                 }
             }
 
-            cooling_schedule_->update_temperature();
             ++num_iterations_;
+            cooling_schedule_->update_temperature();
+
+            if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency == 0)
+                global_summary->history.push_back(HistoryOutput(num_iterations_, num_stagnant_iterations_, cooling_schedule_->get_temperature(), current_state_.x, current_state_.cost, current_state_.x));
 
             if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
                 t1 = WallTimeInSeconds();
@@ -238,10 +244,13 @@ namespace pallas {
                     LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
                 }
                 global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
-                global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 prepare_final_summary_(global_summary, local_summary);
                 if (internal::IsSolutionUsable(global_summary) || internal::IsSolutionUsable(local_summary))
                     x = global_minimum_state_.x;
+
+                if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency != 0)
+                    global_summary->history.push_back(HistoryOutput(num_iterations_, num_stagnant_iterations_, cooling_schedule_->get_temperature(), current_state_.x, current_state_.cost, current_state_.x));
+                global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 return;
             }
         }
@@ -289,5 +298,35 @@ namespace pallas {
                SimulatedAnnealing::Summary* summary) {
         SimulatedAnnealing solver;
         solver.Solve(options, problem, parameters, summary);
+    }
+
+    void dump(const SimulatedAnnealing::HistoryOutput &h, HistoryWriter& writer) {
+        writer.StartObject();
+        writer.String("iteration_number");
+        writer.Uint(h.iteration_number);
+
+        writer.String("stagnant_iterations");
+        writer.Uint(h.stagnant_iterations);
+
+        writer.String("temperature");
+        writer.Double(h.temperature);
+
+        writer.String("current_solution");
+        writer.StartArray();
+        for (auto i = 0; i < h.current_solution.size(); ++i)  {
+            writer.Double(h.current_solution[i]);
+        }
+        writer.EndArray();
+
+        writer.String("best_cost");
+        writer.Double(h.best_cost);
+
+        writer.String("best_solution");
+        writer.StartArray();
+        for (auto i = 0; i < h.best_solution.size(); ++i)  {
+            writer.Double(h.best_solution[i]);
+        }
+        writer.EndArray();
+        writer.EndObject();
     }
 } // namespace pallas

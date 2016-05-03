@@ -40,6 +40,7 @@
 
 #include <cfloat>
 
+#include "pallas/history_concept.h"
 #include "pallas/scoped_ptr.h"
 #include "pallas/step_function.h"
 #include "pallas/types.h"
@@ -140,8 +141,9 @@ namespace pallas {
                 step_function.swap(default_step);
                 max_iterations = 100;
                 max_stagnant_iterations = 20;
-                minimum_cost = DBL_MIN;
+                minimum_cost = -DBL_MAX;
                 is_silent = true;
+                history_save_frequency = 0;
             }
 
             /**
@@ -186,11 +188,15 @@ namespace pallas {
              */
             bool is_silent;
 
-        };
             /**
-             * @brief Contains a summary of the optimization.
-             * @details This struct contains the result of the optimization and has convenience methods for printing reports of a completed optimization.
+             * Frequency to save the state of the system. Values will be appended to a `HistorySeries` contained
+             * in the optimization summary. Default is 0. If 0 then history is not saved. Otherwise, the state of
+             * the system will be appended to the series when `i % history_save_frequency == 0`. If there are a
+             * large number of iterations this can lead to a lot of data being stored in memory.
              */
+            unsigned int history_save_frequency;
+        };
+
         /**
          * @brief Contains a summary of the optimization.
          * @details This struct contains the result of the optimization and has convenience methods for printing reports of a completed optimization.
@@ -229,7 +235,38 @@ namespace pallas {
 
             double cost_evaluation_time_in_seconds;/**<Time spent evaluating cost function (outside local minimization)*/
 
-            double cost_evaluation_time_in_seconds;/**<time spent evaluating cost function (outside local minimization)*/
+            HistorySeries history;/**<History of the system saved on the interval specified by the `history_save_frequency` option.*/
+        };
+
+        /**
+         * @brief Stores information about the state of the system for at a given iteration number
+         */
+        struct HistoryOutput {
+
+            /**
+             * @brief Constructor
+             *
+             * @param iteration_number unsigned int. The number of global optimization iterations that have elapsed.
+             * @param stagnant_iterations unsigned int. The number of iterations that have elapsed without finding a new global minimum.
+             * @param current_solution Vector. Candidate solution vector for the current iteration.
+             * @param best_cost double. Cost associated with the best solution found at any iteration thus far during optimization.
+             * @param best_solution Vector. Best solution found at any iteration thus far during optimization.
+             */
+            HistoryOutput(unsigned int iteration_number,
+                          unsigned int stagnant_iterations,
+                          const Vector &current_solution,
+                          double best_cost,
+                          const Vector &best_solution)
+                    : iteration_number(iteration_number),
+                      stagnant_iterations(stagnant_iterations),
+                      current_solution(current_solution),
+                      best_cost(best_cost),
+                      best_solution(best_solution) {}
+            unsigned int iteration_number;/**<The number of global optimization iterations that have elapsed.*/
+            unsigned int stagnant_iterations;/**<The number of iterations that have elapsed without finding a new global minimum.*/
+            Vector current_solution;/**<Candidate solution for the current iteration.*/
+            double best_cost;/**<Cost associated with the best solution found at any iteration thus far during optimization.*/
+            Vector best_solution;/**<Best solution found at any iteration thus far during optimization.*/
         };
 
         /**
@@ -296,6 +333,14 @@ namespace pallas {
                const GradientProblem& problem,
                double* parameters,
                Basinhopping::Summary* summary);
+
+    /**
+     * @brief Dumps the system state contained in the history output into the stream contained by the writer.
+     *
+     * @param h Basinhopping::HistoryOutput. State of the system for a specific iteration.
+     * @param writer HistoryWriter. Object responsible for writing the history output to a stream.
+     */
+    void dump(const Basinhopping::HistoryOutput &h, HistoryWriter& writer);
 
 } // namespace pallas
 

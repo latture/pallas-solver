@@ -25,6 +25,8 @@
 // Author: ryan.latture@gmail.com (Ryan Latture)
 
 #include "gtest/gtest.h"
+#include "rapidjson/document.h"
+#include "rapidjson/error/en.h"
 
 #include "pallas/basinhopping.h"
 #include "pallas/brute.h"
@@ -141,6 +143,39 @@ namespace pallas {
         EXPECT_NEAR(1.0, parameters[1], expected_tolerance);
     }
 
+    TEST(Basinhopping, SavesHistoryOutput) {
+        double parameters[2] = {-1.2, 0.0};
+
+        pallas::Basinhopping::Options options;
+        options.max_iterations = 2;
+        options.history_save_frequency = 1;
+        pallas::Basinhopping::Summary summary;
+        pallas::GradientProblem problem(new Rosenbrock());
+        pallas::Solve(options, problem, parameters, &summary);
+
+        rapidjson::StringBuffer sb;
+        HistoryWriter writer(sb);
+        rapidjson::Document d;
+        dump(summary.history, writer);
+        d.Parse(sb.GetString());
+        EXPECT_TRUE(!d.Parse(sb.GetString()).HasParseError()) << "Error parsing dumped history data: " << rapidjson::GetParseError_En(d.GetParseError());
+
+        std::vector<std::string> expected_members = {"iteration_number", "stagnant_iterations", "current_solution", "best_cost", "best_solution"};
+        for (auto i = 0; i < d.Size(); ++i) {
+            for (auto& member: expected_members)
+                EXPECT_TRUE(d[i].HasMember(member.c_str())) << "History output missing member: " << member ;
+        }
+
+        double history_best_cost = d[d.Size() - 1]["best_cost"].GetDouble();
+        double history_best_x = d[d.Size() - 1]["best_solution"].GetArray()[0].GetDouble();
+        double history_best_y = d[d.Size() - 1]["best_solution"].GetArray()[1].GetDouble();
+
+        EXPECT_EQ(summary.history.size(), summary.num_iterations);
+        EXPECT_DOUBLE_EQ(summary.final_cost, history_best_cost);
+        EXPECT_DOUBLE_EQ(parameters[0], history_best_x);
+        EXPECT_DOUBLE_EQ(parameters[1], history_best_y);
+    }
+
     TEST(SimulatedAnnealing, SolvesRosenbrockWithoutPolishing) {
         const double expected_tolerance = 0.1;
         double parameters[2] = {-1.2, 0.0};
@@ -202,6 +237,39 @@ namespace pallas {
         EXPECT_NEAR(1.0, parameters[1], expected_tolerance);
     }
 
+    TEST(SimulatedAnnealing, SavesHistoryOutput) {
+        double parameters[2] = {-1.2, 0.0};
+
+        pallas::SimulatedAnnealing::Options options;
+        options.dwell_iterations = 1;
+        options.max_iterations = 2;
+        options.history_save_frequency = 1;
+        pallas::SimulatedAnnealing::Summary summary;
+        pallas::GradientProblem problem(new Rosenbrock());
+        pallas::Solve(options, problem, parameters, &summary);
+
+        rapidjson::StringBuffer sb;
+        HistoryWriter writer(sb);
+        rapidjson::Document d;
+        dump(summary.history, writer);
+        EXPECT_FALSE(d.Parse(sb.GetString()).HasParseError()) << "Error parsing dumped history data: " << rapidjson::GetParseError_En(d.GetParseError());
+
+        std::vector<std::string> expected_members = {"iteration_number", "stagnant_iterations", "temperature", "current_solution", "best_cost", "best_solution"};
+        for (auto i = 0; i < d.Size(); ++i) {
+            for (auto& member: expected_members)
+                EXPECT_TRUE(d[i].HasMember(member.c_str())) << "History output missing member: " << member ;
+        }
+
+        double history_best_cost = d[d.Size() - 1]["best_cost"].GetDouble();
+        double history_best_x = d[d.Size() - 1]["best_solution"].GetArray()[0].GetDouble();
+        double history_best_y = d[d.Size() - 1]["best_solution"].GetArray()[1].GetDouble();
+
+        EXPECT_EQ(summary.history.size(), summary.num_iterations);
+        EXPECT_DOUBLE_EQ(summary.final_cost, history_best_cost);
+        EXPECT_DOUBLE_EQ(parameters[0], history_best_x);
+        EXPECT_DOUBLE_EQ(parameters[1], history_best_y);
+    }
+
     TEST(Brute, SolvesRosenbrockWithDefaults) {
         const double expected_tolerance = 1e-8;
 
@@ -221,8 +289,45 @@ namespace pallas {
         EXPECT_NEAR(1.0, parameters[1], expected_tolerance);
     }
 
-    TEST(DifferentialEvolution, SolvesRosenbrockCustomBoundsNoPolish) {
+    TEST(Brute, SavesHistoryOutput) {
         const double expected_tolerance = 1e-8;
+
+        pallas::GradientProblem problem(new Rosenbrock());
+
+        pallas::Brute brute;
+        pallas::Brute::Options options;
+        options.history_save_frequency = 1;
+        pallas::Brute::Summary summary;
+
+        std::vector<Brute::ParameterRange> ranges = {Brute::ParameterRange(-3.0, 3.0, 7),
+                                                     Brute::ParameterRange(-3.0, 3.0, 7)};
+
+        Vector parameters(2);
+        brute.Solve(options, problem, ranges, parameters.data(), &summary);
+
+        rapidjson::StringBuffer sb;
+        HistoryWriter writer(sb);
+        rapidjson::Document d;
+        dump(summary.history, writer);
+        d.Parse(sb.GetString());
+        EXPECT_TRUE(!d.Parse(sb.GetString()).HasParseError()) << "Error parsing dumped history data: " << rapidjson::GetParseError_En(d.GetParseError());
+
+        std::vector<std::string> expected_members = {"iteration_number", "current_solution", "best_cost", "best_solution"};
+        for (auto i = 0; i < d.Size(); ++i) {
+            for (auto& member: expected_members)
+                EXPECT_TRUE(d[i].HasMember(member.c_str())) << "History output missing member: " << member;
+        }
+
+        double history_best_x = d[d.Size() - 1]["best_solution"].GetArray()[0].GetDouble();
+        double history_best_y = d[d.Size() - 1]["best_solution"].GetArray()[1].GetDouble();
+
+        EXPECT_EQ(summary.num_iterations, summary.history.size());
+        EXPECT_DOUBLE_EQ(parameters[0], history_best_x);
+        EXPECT_DOUBLE_EQ(parameters[1], history_best_y);
+    }
+
+    TEST(DifferentialEvolution, SolvesRosenbrockCustomBoundsNoPolish) {
+        const double expected_tolerance = 1e-4;
         double parameters[2] = {-1.2, 0.0};
 
         Vector upper(2);
@@ -266,7 +371,44 @@ namespace pallas {
         EXPECT_NEAR(1.0, parameters[1], expected_tolerance);
     }
 
+    TEST(DifferentialEvolution, SavesHistoryOutput) {
+        double parameters[2] = {-1.2, 0.0};
 
+        Vector upper(2);
+        upper << 10.0, 10.0;
+
+        Vector lower(2);
+        lower << -10.0, -10.0;
+
+        pallas::DifferentialEvolution::Options options;
+        options.upper_bounds = upper;
+        options.lower_bounds = lower;
+        options.max_iterations = 2;
+        options.history_save_frequency = 1;
+        pallas::DifferentialEvolution::Summary summary;
+        pallas::GradientProblem problem(new Rosenbrock());
+        pallas::Solve(options, problem, parameters, &summary);
+
+        rapidjson::StringBuffer sb;
+        HistoryWriter writer(sb);
+        rapidjson::Document d;
+        dump(summary.history, writer);
+        d.Parse(sb.GetString());
+        EXPECT_TRUE(!d.Parse(sb.GetString()).HasParseError()) << "Error parsing dumped history data: " << rapidjson::GetParseError_En(d.GetParseError());
+
+        std::vector<std::string> expected_members = {"iteration_number", "population", "best_cost", "best_solution"};
+        for (auto i = 0; i < d.Size(); ++i) {
+            for (auto& member: expected_members)
+                EXPECT_TRUE(d[i].HasMember(member.c_str())) << "History output missing member: " << member;
+        }
+
+        double history_best_x = d[d.Size() - 1]["best_solution"].GetArray()[0].GetDouble();
+        double history_best_y = d[d.Size() - 1]["best_solution"].GetArray()[1].GetDouble();
+
+        EXPECT_EQ(summary.num_iterations + 1, summary.history.size());
+        EXPECT_DOUBLE_EQ(parameters[0], history_best_x);
+        EXPECT_DOUBLE_EQ(parameters[1], history_best_y);
+    }
 } // namespace pallas
 
 int main(int argc, char **argv) {

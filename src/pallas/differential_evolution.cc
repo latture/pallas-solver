@@ -159,7 +159,8 @@ namespace pallas {
         global_minimum_state_.cost = population_energies_.minCoeff(&min_idx);
         global_minimum_state_.x = population_[min_idx];
 
-        GradientLocalMinimizer::Summary local_summary;
+        if (options.history_save_frequency > 0)
+            global_summary->history.push_back(HistoryOutput(num_iterations_, population_, global_minimum_state_.cost, global_minimum_state_.x));
 
         if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
             prepare_final_summary_(global_summary, local_summary);
@@ -214,18 +215,20 @@ namespace pallas {
 
             update_std_dev_();
 
-            if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
-                t1 = WallTimeInSeconds();
+            if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency == 0)
+                global_summary->history.push_back(HistoryOutput(num_iterations_, population_, global_minimum_state_.cost, global_minimum_state_.x));
 
+            if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
                 if (options.polish_output) {
+                    t1 = WallTimeInSeconds();
                     GradientLocalMinimizer local_minimizer;
                     local_minimizer.Solve(options.local_minimizer_options,
                                           problem,
                                           global_minimum_state_.x.data(),
                                           &local_summary);
                     global_summary->was_polished = true;
+                    global_summary->local_minimization_time_in_seconds = WallTimeInSeconds() - t1;
                 }
-                global_summary->local_minimization_time_in_seconds = WallTimeInSeconds() - t1;
 
                 t1 = WallTimeInSeconds();
                 if (!Evaluate(problem, global_minimum_state_.x, &global_minimum_state_.cost, &global_summary->message)) {
@@ -235,10 +238,13 @@ namespace pallas {
                     LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
                 }
                 global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
-                global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 prepare_final_summary_(global_summary, local_summary);
                 if (internal::IsSolutionUsable(global_summary)||internal::IsSolutionUsable(local_summary))
                     x = global_minimum_state_.x;
+
+                if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency != 0)
+                    global_summary->history.push_back(HistoryOutput(num_iterations_, population_, global_minimum_state_.cost, global_minimum_state_.x));
+                global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 return;
             }
         }
@@ -382,17 +388,13 @@ namespace pallas {
 
     void DifferentialEvolution::update_std_dev_() {
         double mean = population_energies_.mean();
-
-        double variance = 0.0;
-        double temp;
+        double temp, variance = 0.0;
         for(unsigned int i = 0; i < population_size_; ++i) {
             temp = (population_energies_[i] - mean);
             variance += temp * temp;
         }
         variance /= (population_size_ - 1);
-
         fractional_std_dev_ = std::sqrt(variance) / std::abs(mean);
-
     }
 
     void DifferentialEvolution::mutate_(Vector& candidate, unsigned int idx) {
@@ -439,4 +441,31 @@ namespace pallas {
         solver.Solve(options, problem, parameters, summary);
     };
 
+    void dump(const DifferentialEvolution::HistoryOutput &h, HistoryWriter& writer) {
+        writer.StartObject();
+        writer.String("iteration_number");
+        writer.Uint(h.iteration_number);
+
+        writer.String("population");
+        writer.StartArray();
+        for (auto& individual : h.population) {
+            writer.StartArray();
+            for (auto i = 0; i < individual.size(); ++i)  {
+                writer.Double(individual[i]);
+            }
+            writer.EndArray();
+        }
+        writer.EndArray();
+
+        writer.String("best_cost");
+        writer.Double(h.best_cost);
+
+        writer.String("best_solution");
+        writer.StartArray();
+        for (auto i = 0; i < h.best_solution.size(); ++i)  {
+            writer.Double(h.best_solution[i]);
+        }
+        writer.EndArray();
+        writer.EndObject();
+    }
 } // namespace pallas

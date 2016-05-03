@@ -8,6 +8,7 @@
 #include "ceres/ceres.h"
 #include "ceres/types.h"
 #include "Eigen/Core"
+#include "rapidjson/writer.h"
 
 namespace pallas {
 
@@ -29,6 +30,8 @@ namespace pallas {
     using TerminationType = ceres::TerminationType;
 
     using Vector2d = Eigen::Vector2d;
+
+    using HistoryWriter = rapidjson::Writer<rapidjson::StringBuffer>;
 
     enum MutationStrategyType {
         BEST_1,

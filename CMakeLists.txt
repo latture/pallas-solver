@@ -14,6 +14,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(EIGEN_SUBDIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/eigen/")
 set(GTEST_SUBDIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/googletest/googletest")
+set(RAPIDJSON_SUBDIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/rapidjson")
 set(FIND_GLOG_SUBDIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_MODULE_PATH "${FIND_GLOG_SUBDIR};${CMAKE_MODULE_PATH}")
 
@@ -25,6 +26,7 @@ endmacro()
 
 check_dir_exists(${EIGEN_SUBDIR})
 check_dir_exists(${GTEST_SUBDIR})
+check_dir_exists(${RAPIDJSON_SUBDIR})
 check_dir_exists(${FIND_GLOG_SUBDIR})
 
 set(EIGEN_INCLUDE_DIR ${EIGEN_SUBDIR})
@@ -38,7 +40,8 @@ include_directories(APPEND
                     ${CERES_INCLUDE_DIRS}
                     ${EIGEN_SUBDIR}
                     ${GTEST_SUBDIR}
-                    ${GLOG_INCLUDE_DIR})
+                    ${GLOG_INCLUDE_DIR}
+                    ${RAPIDJSON_SUBDIR}/include)
 
 add_subdirectory(${GTEST_SUBDIR})
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/pallas)

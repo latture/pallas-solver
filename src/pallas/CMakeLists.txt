@@ -3,6 +3,7 @@ set(PALLAS_SOURCES
     brute.cc
     cooling_schedule.cc
     differential_evolution.cc
+    history_concept.cc
     simulated_annealing.cc
     step_function.cc
     types.cc
@@ -10,8 +11,7 @@ set(PALLAS_SOURCES
     internal/mutation_strategy.cc
     internal/state.cc
     internal/stringprintf.cc
-    internal/wall_time.cc
-    )
+    internal/wall_time.cc)
 
 add_library(pallas ${PALLAS_SOURCES})
 target_link_libraries(pallas ${CERES_LIBRARIES} ${GLOG_LIBRARIES})

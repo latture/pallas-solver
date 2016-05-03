@@ -216,6 +216,9 @@ namespace pallas {
         candidate_state_ = current_state_;
         global_minimum_state_ = current_state_;
 
+        if (options.history_save_frequency > 0)
+            global_summary->history.push_back(HistoryOutput(num_iterations_, num_stagnant_iterations_, current_state_.x, global_minimum_state_.cost, global_minimum_state_.x));
+
         // check that initial minimization didn't satisfy termination conditions
         // before entering main loop
         if (check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
@@ -265,11 +268,16 @@ namespace pallas {
 
             ++num_iterations_;
 
+            if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency == 0)
+                global_summary->history.push_back(HistoryOutput(num_iterations_, num_stagnant_iterations_, current_state_.x, global_minimum_state_.cost, global_minimum_state_.x));
+
             if (check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
                 prepare_final_summary_(global_summary, local_summary);
                 if (internal::IsSolutionUsable(global_summary))
                     x = global_minimum_state_.x;
 
+                if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency != 0)
+                    global_summary->history.push_back(HistoryOutput(num_iterations_, num_stagnant_iterations_, current_state_.x, global_minimum_state_.cost, global_minimum_state_.x));
                 global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 return;
             }
@@ -310,5 +318,32 @@ namespace pallas {
                Basinhopping::Summary* summary) {
         Basinhopping solver;
         solver.Solve(options, problem, parameters, summary);
+    }
+
+    void dump(const Basinhopping::HistoryOutput &h, HistoryWriter& writer) {
+        writer.StartObject();
+        writer.String("iteration_number");
+        writer.Uint(h.iteration_number);
+
+        writer.String("stagnant_iterations");
+        writer.Uint(h.stagnant_iterations);
+
+        writer.String("current_solution");
+        writer.StartArray();
+        for (auto i = 0; i < h.current_solution.size(); ++i)  {
+            writer.Double(h.current_solution[i]);
+        }
+        writer.EndArray();
+
+        writer.String("best_cost");
+        writer.Double(h.best_cost);
+
+        writer.String("best_solution");
+        writer.StartArray();
+        for (auto i = 0; i < h.best_solution.size(); ++i)  {
+            writer.Double(h.best_solution[i]);
+        }
+        writer.EndArray();
+        writer.EndObject();
     }
 } // namespace pallas

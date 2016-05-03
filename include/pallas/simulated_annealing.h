@@ -30,6 +30,7 @@
 #include <cfloat>
 
 #include "pallas/cooling_schedule.h"
+#include "pallas/history_concept.h"
 #include "pallas/step_function.h"
 #include "pallas/types.h"
 #include "pallas/internal/state.h"
@@ -152,9 +153,10 @@ namespace pallas {
                 max_iterations = 1000;
                 max_stagnant_iterations = 100;
                 dwell_iterations = 20;
-                minimum_cost = DBL_MIN;
+                minimum_cost = -DBL_MAX;
                 is_silent = true;
                 polish_output = false;
+                history_save_frequency = 0;
             };
 
             /**
@@ -214,6 +216,14 @@ namespace pallas {
              * Whether to log failure information relating the to global optimization algorithm using glog.
              */
             bool is_silent;
+
+            /**
+             * Frequency to save the state of the system. Values will be appended to a `HistorySeries` contained
+             * in the optimization summary. Default is 0. If 0 then history is not saved. Otherwise, the state of
+             * the system will be appended to the series when `i % history_save_frequency == 0`. If there are a
+             * large number of iterations this can lead to a lot of data being stored in memory.
+             */
+            unsigned int history_save_frequency;
         };
 
         /**
@@ -258,6 +268,43 @@ namespace pallas {
             double cost_evaluation_time_in_seconds;/**<time spent evaluating cost function (outside local minimization)*/
 
             bool was_polished;/**<whether global minimum was polished after differential evolution completed*/
+
+            HistorySeries history;/**<History of the system saved on the interval specified by the `history_save_frequency` option.*/
+        };
+
+        /**
+         * @brief Stores information about the state of the system for at a given iteration number
+         */
+        struct HistoryOutput {
+
+            /**
+             * @brief Constructor
+             *
+             * @param iteration_number unsigned int. The number of global optimization iterations that have elapsed.
+             * @param stagnant_iterations unsigned int. The number of iterations that have elapsed without finding a new global minimum.
+             * @param temperature double. Current temperature of the system.
+             * @param current_solution Vector. Candidate solution vector for the current iteration.
+             * @param best_cost double. Cost associated with the best solution found at any iteration thus far during optimization.
+             * @param best_solution Vector. Best solution found at any iteration thus far during optimization.
+             */
+            HistoryOutput(unsigned int iteration_number,
+                          unsigned int stagnant_iterations,
+                          double temperature,
+                          const Vector &current_solution,
+                          double best_cost,
+                          const Vector &best_solution)
+                    : iteration_number(iteration_number),
+                      stagnant_iterations(stagnant_iterations),
+                      temperature(temperature),
+                      current_solution(current_solution),
+                      best_cost(best_cost),
+                      best_solution(best_solution) {}
+            unsigned int iteration_number;/**<The number of global optimization iterations that have elapsed.*/
+            unsigned int stagnant_iterations;/**<The number of iterations that have elapsed without finding a new global minimum.*/
+            double temperature;/**<Current temperature of the system.*/
+            Vector current_solution;/**<Candidate solution for the current iteration.*/
+            double best_cost;/**<Cost associated with the best solution found at any iteration thus far during optimization.*/
+            Vector best_solution;/**<Best solution found at any iteration thus far during optimization.*/
         };
 
         /**
@@ -326,6 +373,15 @@ namespace pallas {
                const GradientProblem& problem,
                double* parameters,
                SimulatedAnnealing::Summary* summary);
+
+    /**
+     * @brief Dumps the system state contained in the history output into the stream contained by the writer.
+     *
+     * @param h SimulatedAnnealing::HistoryOutput. State of the system for a specific iteration.
+     * @param writer HistoryWriter. Object responsible for writing the history output to a stream.
+     */
+    void dump(const SimulatedAnnealing::HistoryOutput &h, HistoryWriter& writer);
+
 } // namespace pallas
 
 #endif // PALLAS_SIMULATED_ANNEALING_H

@@ -38,6 +38,7 @@
 #ifndef PALLAS_BRUTE_H
 #define PALLAS_BRUTE_H
 
+#include "pallas/history_concept.h"
 #include "pallas/types.h"
 
 namespace pallas {
@@ -125,6 +126,7 @@ namespace pallas {
                 local_minimizer_options = GradientLocalMinimizer::Options();
                 polish_output = false;
                 is_silent = true;
+                history_save_frequency = 0;
             };
 
             /**
@@ -142,6 +144,13 @@ namespace pallas {
              */
             bool is_silent;
 
+            /**
+             * Frequency to save the state of the system. Values will be appended to a `HistorySeries` contained
+             * in the optimization summary. Default is 0. If 0 then history is not saved. Otherwise, the state of
+             * the system will be appended to the series when `i % history_save_frequency == 0`. If there are a
+             * large number of iterations this can lead to a lot of data being stored in memory.
+             */
+            unsigned int history_save_frequency;
         };
 
         /**
@@ -179,6 +188,35 @@ namespace pallas {
             double cost_evaluation_time_in_seconds;/**<time spent evaluating cost function (outside local minimization)*/
 
             bool was_polished;/**<specifies whether the output was polished*/
+
+            HistorySeries history;/**<History of the system saved on the interval specified by the `history_save_frequency` option.*/
+        };
+
+        /**
+         * @brief Stores information about the state of the system for at a given iteration number
+         */
+        struct HistoryOutput {
+
+            /**
+             * @brief Constructor
+             *
+             * @param iteration_number unsigned int. The number of global optimization iterations that have elapsed.
+             * @param current_solution Vector. Candidate solution vector for the current iteration.
+             * @param best_cost double. Cost associated with the best solution found at any iteration thus far during optimization.
+             * @param best_solution Vector. Best solution found at any iteration thus far during optimization.
+             */
+            HistoryOutput(unsigned int iteration_number,
+                          const Vector &current_solution,
+                          double best_cost,
+                          const Vector &best_solution)
+                    : iteration_number(iteration_number),
+                      current_solution(current_solution),
+                      best_cost(best_cost),
+                      best_solution(best_solution) {}
+            unsigned int iteration_number;/**<The number of global optimization iterations that have elapsed.*/
+            Vector current_solution;/**<Candidate solution for the current iteration.*/
+            double best_cost;/**<Cost associated with the best solution found at any iteration thus far during optimization.*/
+            Vector best_solution;/**<Best solution found at any iteration thus far during optimization.*/
         };
 
         /**
@@ -271,6 +309,15 @@ namespace pallas {
                const std::vector<Brute::ParameterRange> &parameter_ranges,
                double* parameters,
                Brute::Summary *global_summary);
+
+    /**
+     * @brief Dumps the system state contained in the history output into the stream contained by the writer.
+     *
+     * @param h Brute::HistoryOutput. State of the system for a specific iteration.
+     * @param writer HistoryWriter. Object responsible for writing the history output to a stream.
+     */
+    void dump(const Brute::HistoryOutput &h, HistoryWriter& writer);
+
 } // namespace pallas
 
 #endif // PALLAS_BRUTE_H
