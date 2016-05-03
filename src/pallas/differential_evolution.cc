@@ -221,7 +221,7 @@ namespace pallas {
                 t1 = WallTimeInSeconds();
                 if (!Evaluate(problem, global_minimum_state_.x, &global_minimum_state_.cost, &global_summary->message)) {
                     global_summary->termination_type = TerminationType::FAILURE;
-                    global_summary->message = "Cost evaluation of global mininum state failed after polishing step "
+                    global_summary->message = "Cost evaluation of global minimum state failed after polishing step "
                                                       "More details: " + global_summary->message;
                     LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
                 }
