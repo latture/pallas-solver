@@ -38,7 +38,6 @@
 
 
 namespace pallas {
-    
     /**
      * @brief Minimizes a function using simulated annealing.
      * @details Uses simulated annealing, a random algorithm that uses no 
@@ -222,9 +221,9 @@ namespace pallas {
          * @details This struct contains the result of the optimization and has convenience methods for printing reports of a completed optimization.
          */
         struct Summary {
-           /**
-            * @brief Default constructor
-            */
+            /**
+             * @brief Default constructor
+             */
             Summary();
 
             std::string BriefReport() const;/**<A brief one line description of the state of the solver after termination.*/
