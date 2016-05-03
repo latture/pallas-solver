@@ -1,0 +1,17 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="pallas::internal::Mutation\lStrategy",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1internal_1_1_mutation_strategy.html"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="pallas::internal::Mutate\lBest1",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1internal_1_1_mutate_best1.html"];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="pallas::internal::Mutate\lBest2",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1internal_1_1_mutate_best2.html"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="pallas::internal::Mutate\lRand1",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1internal_1_1_mutate_rand1.html"];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="pallas::internal::Mutate\lRand2",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1internal_1_1_mutate_rand2.html"];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="pallas::internal::Mutate\lRandToBest1",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1internal_1_1_mutate_rand_to_best1.html"];
+}

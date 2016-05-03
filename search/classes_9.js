@@ -1,24 +1,10 @@
 var searchData=
 [
-  ['scoped_5farray',['scoped_array',['../classpallas_1_1scoped__array.html',1,'pallas']]],
-  ['scoped_5fptr',['scoped_ptr',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20gradientcostfunction_20_3e',['scoped_ptr&lt; GradientCostFunction &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20internal_3a_3acrossoverstrategy_20_3e',['scoped_ptr&lt; internal::CrossoverStrategy &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20internal_3a_3amutationstrategy_20_3e',['scoped_ptr&lt; internal::MutationStrategy &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20internal_3a_3arandomnumbergenerator_3c_20double_20_3e_20_3e',['scoped_ptr&lt; internal::RandomNumberGenerator&lt; double &gt; &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20internal_3a_3ashuffler_20_3e',['scoped_ptr&lt; internal::Shuffler &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20pallas_3a_3acoolingschedule_20_3e',['scoped_ptr&lt; pallas::CoolingSchedule &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20pallas_3a_3ainternal_3a_3arandomnumbergenerator_3c_20double_20_3e_20_3e',['scoped_ptr&lt; pallas::internal::RandomNumberGenerator&lt; double &gt; &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20pallas_3a_3ainternal_3a_3arandomnumbergenerator_3c_20unsigned_20int_20_3e_20_3e',['scoped_ptr&lt; pallas::internal::RandomNumberGenerator&lt; unsigned int &gt; &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_3c_20pallas_3a_3astepfunction_20_3e',['scoped_ptr&lt; pallas::StepFunction &gt;',['../classpallas_1_1scoped__ptr.html',1,'pallas']]],
-  ['scoped_5fptr_5fmalloc',['scoped_ptr_malloc',['../classpallas_1_1scoped__ptr__malloc.html',1,'pallas']]],
-  ['scopedptrmallocfree',['ScopedPtrMallocFree',['../classpallas_1_1_scoped_ptr_malloc_free.html',1,'pallas']]],
-  ['shuffler',['Shuffler',['../classpallas_1_1internal_1_1_shuffler.html',1,'pallas::internal']]],
-  ['simulatedannealing',['SimulatedAnnealing',['../classpallas_1_1_simulated_annealing.html',1,'pallas']]],
-  ['state',['State',['../structpallas_1_1internal_1_1_state.html',1,'pallas::internal']]],
-  ['stepfunction',['StepFunction',['../classpallas_1_1_step_function.html',1,'pallas']]],
-  ['summary',['Summary',['../structpallas_1_1_simulated_annealing_1_1_summary.html',1,'pallas::SimulatedAnnealing']]],
-  ['summary',['Summary',['../structpallas_1_1_differential_evolution_1_1_summary.html',1,'pallas::DifferentialEvolution']]],
-  ['summary',['Summary',['../structpallas_1_1_brute_1_1_summary.html',1,'pallas::Brute']]],
-  ['summary',['Summary',['../structpallas_1_1_basinhopping_1_1_summary.html',1,'pallas::Basinhopping']]]
+  ['randomnumbergenerator',['RandomNumberGenerator',['../classpallas_1_1internal_1_1_random_number_generator.html',1,'pallas::internal']]],
+  ['randomnumbergenerator_3c_20double_20_3e',['RandomNumberGenerator&lt; double &gt;',['../classpallas_1_1internal_1_1_random_number_generator.html',1,'pallas::internal']]],
+  ['randomnumbergenerator_3c_20t_2c_20typename_20std_3a_3aenable_5fif_3c_20std_3a_3ais_5ffloating_5fpoint_3c_20t_20_3e_3a_3avalue_20_3e_3a_3atype_20_3e',['RandomNumberGenerator&lt; T, typename std::enable_if&lt; std::is_floating_point&lt; T &gt;::value &gt;::type &gt;',['../classpallas_1_1internal_1_1_random_number_generator_3_01_t_00_01typename_01std_1_1enable__if_3_02af253b4ca62abead65be60dbd55470c.html',1,'pallas::internal']]],
+  ['randomnumbergenerator_3c_20t_2c_20typename_20std_3a_3aenable_5fif_3c_20std_3a_3ais_5fintegral_3c_20t_20_3e_3a_3avalue_20_3e_3a_3atype_20_3e',['RandomNumberGenerator&lt; T, typename std::enable_if&lt; std::is_integral&lt; T &gt;::value &gt;::type &gt;',['../classpallas_1_1internal_1_1_random_number_generator_3_01_t_00_01typename_01std_1_1enable__if_3_02b8264d67c17962862b8cec50b547caf.html',1,'pallas::internal']]],
+  ['randomnumbergenerator_3c_20unsigned_20int_20_3e',['RandomNumberGenerator&lt; unsigned int &gt;',['../classpallas_1_1internal_1_1_random_number_generator.html',1,'pallas::internal']]],
+  ['rosenbrock',['Rosenbrock',['../class_rosenbrock.html',1,'']]],
+  ['rosenbrock',['Rosenbrock',['../classpallas_1_1_rosenbrock.html',1,'pallas']]]
 ];

@@ -1,0 +1,17 @@
+digraph "pallas::scoped_array::release"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="pallas::scoped_array\l::release",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="pallas::scoped_ptr\l::operator==",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1scoped__ptr.html#a5f210e6f028d14e32d0cf8026d708939"];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="pallas::scoped_ptr\l::operator!=",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1scoped__ptr.html#a20cbcfe913f0c63dcd5e38ea2fd80809"];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="pallas::scoped_ptr\l::swap",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1scoped__ptr.html#aef9e4e1776b8193db6539eefe204f079"];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="pallas::scoped_array\l::swap",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1scoped__array.html#a37d6e07fc2e5b8f6a4b987426618f319"];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="pallas::scoped_array::get",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1scoped__array.html#a47d19a9b52fca1647730163aae61f2f4",tooltip="Get a pointer to the zeroth element of the current object. "];
+}

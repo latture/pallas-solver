@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['size',['size',['../structpallas_1_1_brute_1_1_parameter_range.html#a7e1e3be5b0c54e95ca57f14e9b2f0792',1,'pallas::Brute::ParameterRange']]],
-  ['start',['start',['../structpallas_1_1_brute_1_1_parameter_range.html#aa14fcc3a5ef99e48d3449477dc87a931',1,'pallas::Brute::ParameterRange']]],
-  ['step_5ffunction',['step_function',['../structpallas_1_1_basinhopping_1_1_options.html#a20ea19f294a16563599ed69477c1e846',1,'pallas::Basinhopping::Options::step_function()'],['../structpallas_1_1_simulated_annealing_1_1_options.html#aa8f043da0b3f42562b44700bdc5dc7bb',1,'pallas::SimulatedAnnealing::Options::step_function()']]],
-  ['step_5ftime_5fin_5fseconds',['step_time_in_seconds',['../structpallas_1_1_basinhopping_1_1_summary.html#a40fbd4bab921db1c85c706baaf35f2bf',1,'pallas::Basinhopping::Summary::step_time_in_seconds()'],['../structpallas_1_1_simulated_annealing_1_1_summary.html#a197be7cc92970da6d681b3e14d1bc0f2',1,'pallas::SimulatedAnnealing::Summary::step_time_in_seconds()']]],
-  ['stop',['stop',['../structpallas_1_1_brute_1_1_parameter_range.html#add766bde95b110452f64450bbbe73320',1,'pallas::Brute::ParameterRange']]]
+  ['permutation_5fbuild_5ftime_5fin_5fseconds',['permutation_build_time_in_seconds',['../structpallas_1_1_brute_1_1_summary.html#a9016994b8a37e55fd02b85cfeba7a69d',1,'pallas::Brute::Summary']]],
+  ['polish_5foutput',['polish_output',['../structpallas_1_1_brute_1_1_options.html#a06e0d39c38a2b2277bdd48e8dc1b544c',1,'pallas::Brute::Options::polish_output()'],['../structpallas_1_1_differential_evolution_1_1_options.html#a1814188c6f5e4558ede2c39e7e5d934e',1,'pallas::DifferentialEvolution::Options::polish_output()'],['../structpallas_1_1_simulated_annealing_1_1_options.html#ac73585d356457958da8ca035c1c949ba',1,'pallas::SimulatedAnnealing::Options::polish_output()']]],
+  ['population',['population',['../structpallas_1_1_differential_evolution_1_1_history_output.html#aebcbbf8b05b717b6eced61f47ec86c91',1,'pallas::DifferentialEvolution::HistoryOutput']]],
+  ['population_5finitialization',['population_initialization',['../structpallas_1_1_differential_evolution_1_1_options.html#afbe8281b542aa1752b94f3e2a8aee4eb',1,'pallas::DifferentialEvolution::Options']]],
+  ['population_5fsize',['population_size',['../structpallas_1_1_differential_evolution_1_1_options.html#a9ff11bbd9021ab226a42c1a4f336edab',1,'pallas::DifferentialEvolution::Options']]]
 ];

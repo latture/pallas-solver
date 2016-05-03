@@ -1,7 +1,0 @@
-<map id="pallas::internal::MutationStrategy" name="pallas::internal::MutationStrategy">
-<area shape="rect" id="node2" href="$classpallas_1_1internal_1_1_mutate_best1.html" title="pallas::internal::Mutate\lBest1" alt="" coords="225,5,387,47"/>
-<area shape="rect" id="node3" href="$classpallas_1_1internal_1_1_mutate_best2.html" title="pallas::internal::Mutate\lBest2" alt="" coords="225,71,387,112"/>
-<area shape="rect" id="node4" href="$classpallas_1_1internal_1_1_mutate_rand1.html" title="pallas::internal::Mutate\lRand1" alt="" coords="225,136,387,177"/>
-<area shape="rect" id="node5" href="$classpallas_1_1internal_1_1_mutate_rand2.html" title="pallas::internal::Mutate\lRand2" alt="" coords="225,201,387,243"/>
-<area shape="rect" id="node6" href="$classpallas_1_1internal_1_1_mutate_rand_to_best1.html" title="pallas::internal::Mutate\lRandToBest1" alt="" coords="225,267,387,308"/>
-</map>
