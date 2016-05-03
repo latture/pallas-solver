@@ -1,4 +1,0 @@
-<map id="pallas::StepFunction" name="pallas::StepFunction">
-<area shape="rect" id="node2" href="$classpallas_1_1_bounded_step_function.html" title="A new candidate solution is generated between upper and lower bounds. Each degree of freedom in the c..." alt="" coords="5,79,201,104"/>
-<area shape="rect" id="node3" href="$classpallas_1_1_default_step_function.html" title="Simple candidate generator that modifies the input by a random amount between +/&#45; step_size..." alt="" coords="224,79,409,104"/>
-</map>

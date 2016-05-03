@@ -1,7 +1,0 @@
-<map id="pallas::scoped_array::release" name="pallas::scoped_array::release">
-<area shape="rect" id="node2" href="$classpallas_1_1scoped__ptr.html#a5f210e6f028d14e32d0cf8026d708939" title="pallas::scoped_ptr\l::operator==" alt="" coords="218,5,348,44"/>
-<area shape="rect" id="node3" href="$classpallas_1_1scoped__ptr.html#a20cbcfe913f0c63dcd5e38ea2fd80809" title="pallas::scoped_ptr\l::operator!=" alt="" coords="218,68,348,107"/>
-<area shape="rect" id="node4" href="$classpallas_1_1scoped__ptr.html#aef9e4e1776b8193db6539eefe204f079" title="pallas::scoped_ptr\l::swap" alt="" coords="218,131,348,169"/>
-<area shape="rect" id="node5" href="$classpallas_1_1scoped__array.html#a37d6e07fc2e5b8f6a4b987426618f319" title="pallas::scoped_array\l::swap" alt="" coords="211,193,355,232"/>
-<area shape="rect" id="node6" href="$classpallas_1_1scoped__array.html#a47d19a9b52fca1647730163aae61f2f4" title="Get a pointer to the zeroth element of the current object. " alt="" coords="198,256,368,281"/>
-</map>

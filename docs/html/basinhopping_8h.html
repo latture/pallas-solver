@@ -94,22 +94,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;cfloat&gt;</code><br />
+<code>#include &quot;pallas/history_concept.h&quot;</code><br />
 <code>#include &quot;pallas/scoped_ptr.h&quot;</code><br />
 <code>#include &quot;pallas/step_function.h&quot;</code><br />
 <code>#include &quot;pallas/types.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="metropolis_8h_source.html">pallas/internal/metropolis.h</a>&quot;</code><br />
+<code>#include &quot;pallas/internal/metropolis.h&quot;</code><br />
 <code>#include &quot;pallas/internal/state.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for basinhopping.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="basinhopping_8h__incl.png" border="0" usemap="#include_2pallas_2basinhopping_8h" alt=""/></div>
 <map name="include_2pallas_2basinhopping_8h" id="include_2pallas_2basinhopping_8h">
-<area shape="rect" id="node3" href="scoped__ptr_8h_source.html" title="pallas/scoped_ptr.h" alt="" coords="191,159,328,184"/>
-<area shape="rect" id="node8" href="step__function_8h_source.html" title="pallas/step_function.h" alt="" coords="327,79,477,104"/>
-<area shape="rect" id="node9" href="types_8h_source.html" title="pallas/types.h" alt="" coords="480,159,583,184"/>
-<area shape="rect" id="node16" href="metropolis_8h.html" title="pallas/internal/metropolis.h" alt="" coords="723,79,903,104"/>
-<area shape="rect" id="node18" href="state_8h_source.html" title="pallas/internal/state.h" alt="" coords="551,79,698,104"/>
-<area shape="rect" id="node13" href="random__number__generator_8h.html" title="pallas/internal/random\l_number_generator.h" alt="" coords="702,152,854,191"/>
 </map>
 </div>
 </div>
@@ -125,18 +120,77 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpallas_1_1_basinhopping_1_1_summary.html">pallas::Basinhopping::Summary</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains a summary of the optimization.  <a href="structpallas_1_1_basinhopping_1_1_summary.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpallas_1_1_basinhopping_1_1_history_output.html">pallas::Basinhopping::HistoryOutput</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores information about the state of the system for at a given iteration number.  <a href="structpallas_1_1_basinhopping_1_1_history_output.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa7c4e7507dfdb493f6b4e66d16941451"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="basinhopping_8h.html#aa7c4e7507dfdb493f6b4e66d16941451">pallas::Solve</a> (const Basinhopping::Options &amp;options, const GradientProblem &amp;problem, double *parameters, Basinhopping::Summary *summary)</td></tr>
-<tr class="memdesc:aa7c4e7507dfdb493f6b4e66d16941451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function which avoids going through the interface of the <a class="el" href="classpallas_1_1_basinhopping.html" title="Minimizes an objective function by sequentially hopping between minima in the objective&#39;s energy land...">pallas::Basinhopping</a> class.  <a href="basinhopping_8h.html#aa7c4e7507dfdb493f6b4e66d16941451">More...</a><br /></td></tr>
+<tr class="memdesc:aa7c4e7507dfdb493f6b4e66d16941451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function that avoids going through the interface of the <a class="el" href="classpallas_1_1_basinhopping.html" title="Minimizes an objective function by sequentially hopping between minima in the objective&#39;s energy land...">pallas::Basinhopping</a> class.  <a href="basinhopping_8h.html#aa7c4e7507dfdb493f6b4e66d16941451">More...</a><br /></td></tr>
 <tr class="separator:aa7c4e7507dfdb493f6b4e66d16941451"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7756bff6b7e1652d05205e0c4e2a393f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="basinhopping_8h.html#a7756bff6b7e1652d05205e0c4e2a393f">pallas::dump</a> (const Basinhopping::HistoryOutput &amp;h, HistoryWriter &amp;writer)</td></tr>
+<tr class="memdesc:a7756bff6b7e1652d05205e0c4e2a393f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps the system state contained in the history output into the stream contained by the writer.  <a href="basinhopping_8h.html#a7756bff6b7e1652d05205e0c4e2a393f">More...</a><br /></td></tr>
+<tr class="separator:a7756bff6b7e1652d05205e0c4e2a393f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Ryan Latture </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>5-18-15</dd></dl>
 <p>This file contains a C++ implementation of the basinhopping algorithm. This code relies on the Google Ceres local minimization functions, and is inspired by the SciPy implementation found in scipy.optimize </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="file_a7756bff6b7e1652d05205e0c4e2a393f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pallas::dump </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structpallas_1_1_basinhopping_1_1_history_output.html">Basinhopping::HistoryOutput</a> &amp;&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">HistoryWriter &amp;&#160;</td>
+          <td class="paramname"><em>writer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Dumps the system state contained in the history output into the stream contained by the writer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">h</td><td><a class="el" href="structpallas_1_1_basinhopping_1_1_history_output.html" title="Stores information about the state of the system for at a given iteration number. ...">Basinhopping::HistoryOutput</a>. State of the system for a specific iteration. </td></tr>
+    <tr><td class="paramname">writer</td><td>HistoryWriter. Object responsible for writing the history output to a stream. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="basinhopping_8h_a7756bff6b7e1652d05205e0c4e2a393f_cgraph.png" border="0" usemap="#basinhopping_8h_a7756bff6b7e1652d05205e0c4e2a393f_cgraph" alt=""/></div>
+<map name="basinhopping_8h_a7756bff6b7e1652d05205e0c4e2a393f_cgraph" id="basinhopping_8h_a7756bff6b7e1652d05205e0c4e2a393f_cgraph">
+</map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="basinhopping_8h_a7756bff6b7e1652d05205e0c4e2a393f_icgraph.png" border="0" usemap="#basinhopping_8h_a7756bff6b7e1652d05205e0c4e2a393f_icgraph" alt=""/></div>
+<map name="basinhopping_8h_a7756bff6b7e1652d05205e0c4e2a393f_icgraph" id="basinhopping_8h_a7756bff6b7e1652d05205e0c4e2a393f_icgraph">
+</map>
+</div>
+</p>
+
+</div>
+</div>
 <a class="anchor" id="file_aa7c4e7507dfdb493f6b4e66d16941451"></a>
 <div class="memitem">
 <div class="memproto">
@@ -173,7 +227,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Helper function which avoids going through the interface of the <a class="el" href="classpallas_1_1_basinhopping.html" title="Minimizes an objective function by sequentially hopping between minima in the objective&#39;s energy land...">pallas::Basinhopping</a> class. </p>
+<p>Helper function that avoids going through the interface of the <a class="el" href="classpallas_1_1_basinhopping.html" title="Minimizes an objective function by sequentially hopping between minima in the objective&#39;s energy land...">pallas::Basinhopping</a> class. </p>
 <p>The specified options are used to setup a basinhopping instance which is then used to minimize the GradientProblem. The optimal solution is stored in <code>parameters</code> and a summary of the global optimization can be found in <code>summary</code>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -190,7 +244,6 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="basinhopping_8h_aa7c4e7507dfdb493f6b4e66d16941451_cgraph.png" border="0" usemap="#basinhopping_8h_aa7c4e7507dfdb493f6b4e66d16941451_cgraph" alt=""/></div>
 <map name="basinhopping_8h_aa7c4e7507dfdb493f6b4e66d16941451_cgraph" id="basinhopping_8h_aa7c4e7507dfdb493f6b4e66d16941451_cgraph">
-<area shape="rect" id="node2" href="classpallas_1_1_basinhopping.html#ad896094bfbc1e17c259bc6d870325c1e" title="Minimizes the specified gradient problem. " alt="" coords="150,5,295,44"/>
 </map>
 </div>
 </p>
@@ -200,7 +253,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Apr 30 2016 15:59:05 for Pallas Solver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue May 3 2016 00:26:05 for Pallas Solver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

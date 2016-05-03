@@ -10,5 +10,6 @@ var searchData=
   ['create',['Create',['../classpallas_1_1_cooling_schedule.html#a195b1e2063d49dad406e61551ce11480',1,'pallas::CoolingSchedule']]],
   ['crossover_5fprobability',['crossover_probability',['../structpallas_1_1_differential_evolution_1_1_options.html#ad3389123e47f627d3d07adb1793c8cdf',1,'pallas::DifferentialEvolution::Options']]],
   ['crossover_5fstrategy',['crossover_strategy',['../structpallas_1_1_differential_evolution_1_1_options.html#a709f47fd078fd8b612d8713f5eede0c3',1,'pallas::DifferentialEvolution::Options::crossover_strategy()'],['../structpallas_1_1_differential_evolution_1_1_summary.html#a4075ec057b22a4aee51a53e945bf7b8a',1,'pallas::DifferentialEvolution::Summary::crossover_strategy()']]],
-  ['crossoverstrategy',['CrossoverStrategy',['../classpallas_1_1internal_1_1_crossover_strategy.html',1,'pallas::internal']]]
+  ['crossoverstrategy',['CrossoverStrategy',['../classpallas_1_1internal_1_1_crossover_strategy.html',1,'pallas::internal']]],
+  ['current_5fsolution',['current_solution',['../structpallas_1_1_basinhopping_1_1_history_output.html#a55d8c16204cc5432fa486fd93a3c661f',1,'pallas::Basinhopping::HistoryOutput::current_solution()'],['../structpallas_1_1_brute_1_1_history_output.html#aae5b016e24a88bc4f29bc8b38729bba6',1,'pallas::Brute::HistoryOutput::current_solution()'],['../structpallas_1_1_simulated_annealing_1_1_history_output.html#a93735ba4da5113205f6dd40204e33b8f',1,'pallas::SimulatedAnnealing::HistoryOutput::current_solution()']]]
 ];

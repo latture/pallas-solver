@@ -1,0 +1,11 @@
+digraph "pallas::DifferentialEvolution::Solve"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="pallas::DifferentialEvolution\l::Solve",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="pallas::DifferentialEvolution\l::DifferentialEvolution",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1_differential_evolution.html#a7a8bde1ab92288de163e8587660e44b6",tooltip="Default constructor. "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="pallas::Solve",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$differential__evolution_8h.html#acfe13f2a03e5b5ad1df54c857db107aa",tooltip="Helper function which avoids going through the interface of the pallas::DifferentialEvolution class..."];
+}

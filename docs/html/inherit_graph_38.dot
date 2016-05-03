@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="pallas::ScopedPtrMallocFree",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1_scoped_ptr_malloc_free.html",tooltip="This class wraps the c library function free() in a class that can be passed as a template argument t..."];
+}

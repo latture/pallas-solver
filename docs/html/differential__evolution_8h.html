@@ -93,24 +93,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">differential_evolution.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;pallas/types.h&quot;</code><br />
+<div class="textblock"><code>#include &lt;cfloat&gt;</code><br />
+<code>#include &quot;pallas/history_concept.h&quot;</code><br />
+<code>#include &quot;pallas/types.h&quot;</code><br />
 <code>#include &quot;pallas/internal/crossover_strategy.h&quot;</code><br />
 <code>#include &quot;pallas/internal/mutation_strategy.h&quot;</code><br />
 <code>#include &quot;pallas/internal/shuffler.h&quot;</code><br />
 <code>#include &quot;pallas/internal/state.h&quot;</code><br />
-<code>#include &lt;cfloat&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for differential_evolution.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="differential__evolution_8h__incl.png" border="0" usemap="#include_2pallas_2differential__evolution_8h" alt=""/></div>
 <map name="include_2pallas_2differential__evolution_8h" id="include_2pallas_2differential__evolution_8h">
-<area shape="rect" id="node2" href="types_8h_source.html" title="pallas/types.h" alt="" coords="130,185,233,211"/>
-<area shape="rect" id="node6" href="crossover__strategy_8h_source.html" title="pallas/internal/crossover\l_strategy.h" alt="" coords="439,92,604,131"/>
-<area shape="rect" id="node15" href="mutation__strategy_8h_source.html" title="pallas/internal/mutation\l_strategy.h" alt="" coords="85,92,243,131"/>
-<area shape="rect" id="node16" href="shuffler_8h_source.html" title="pallas/internal/shuffler.h" alt="" coords="627,99,789,124"/>
-<area shape="rect" id="node17" href="state_8h_source.html" title="pallas/internal/state.h" alt="" coords="268,99,415,124"/>
-<area shape="rect" id="node7" href="scoped__ptr_8h_source.html" title="pallas/scoped_ptr.h" alt="" coords="639,185,775,211"/>
-<area shape="rect" id="node12" href="random__number__generator_8h.html" title="pallas/internal/random\l_number_generator.h" alt="" coords="446,179,599,217"/>
 </map>
 </div>
 </div>
@@ -126,12 +120,18 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpallas_1_1_differential_evolution_1_1_summary.html">pallas::DifferentialEvolution::Summary</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains a summary of the optimization.  <a href="structpallas_1_1_differential_evolution_1_1_summary.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpallas_1_1_differential_evolution_1_1_history_output.html">pallas::DifferentialEvolution::HistoryOutput</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores information about the state of the system for at a given iteration number.  <a href="structpallas_1_1_differential_evolution_1_1_history_output.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:acfe13f2a03e5b5ad1df54c857db107aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="differential__evolution_8h.html#acfe13f2a03e5b5ad1df54c857db107aa">pallas::Solve</a> (const DifferentialEvolution::Options &amp;options, const GradientProblem &amp;problem, double *parameters, DifferentialEvolution::Summary *summary)</td></tr>
 <tr class="memdesc:acfe13f2a03e5b5ad1df54c857db107aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function which avoids going through the interface of the <a class="el" href="classpallas_1_1_differential_evolution.html" title="Minimizes an objective function by continuously evolving a population of candidate solutions...">pallas::DifferentialEvolution</a> class.  <a href="differential__evolution_8h.html#acfe13f2a03e5b5ad1df54c857db107aa">More...</a><br /></td></tr>
 <tr class="separator:acfe13f2a03e5b5ad1df54c857db107aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4e4bdd97a4ee28d7ead9344d43d509f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="differential__evolution_8h.html#ae4e4bdd97a4ee28d7ead9344d43d509f">pallas::dump</a> (const DifferentialEvolution::HistoryOutput &amp;h, HistoryWriter &amp;writer)</td></tr>
+<tr class="memdesc:ae4e4bdd97a4ee28d7ead9344d43d509f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps the system state contained in the history output into the stream contained by the writer.  <a href="differential__evolution_8h.html#ae4e4bdd97a4ee28d7ead9344d43d509f">More...</a><br /></td></tr>
+<tr class="separator:ae4e4bdd97a4ee28d7ead9344d43d509f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Ryan Latture </dd></dl>
@@ -139,6 +139,50 @@ Functions</h2></td></tr>
 <p>This file contains a C++ implementation of the differential algorithm due to Storn and Price: Differential Evolution - a Simple and Efficient Heuristic for Global Optimization over Continuous Spaces.</p>
 <p>This code is based on the SciPy implementation of differential evolution found in scipy.optimize and relies on the local optimization algorithms in the Google Ceres project. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="file_ae4e4bdd97a4ee28d7ead9344d43d509f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pallas::dump </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structpallas_1_1_differential_evolution_1_1_history_output.html">DifferentialEvolution::HistoryOutput</a> &amp;&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">HistoryWriter &amp;&#160;</td>
+          <td class="paramname"><em>writer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Dumps the system state contained in the history output into the stream contained by the writer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">h</td><td><a class="el" href="structpallas_1_1_differential_evolution_1_1_history_output.html" title="Stores information about the state of the system for at a given iteration number. ...">DifferentialEvolution::HistoryOutput</a>. State of the system for a specific iteration. </td></tr>
+    <tr><td class="paramname">writer</td><td>HistoryWriter. Object responsible for writing the history output to a stream. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="differential__evolution_8h_ae4e4bdd97a4ee28d7ead9344d43d509f_cgraph.png" border="0" usemap="#differential__evolution_8h_ae4e4bdd97a4ee28d7ead9344d43d509f_cgraph" alt=""/></div>
+<map name="differential__evolution_8h_ae4e4bdd97a4ee28d7ead9344d43d509f_cgraph" id="differential__evolution_8h_ae4e4bdd97a4ee28d7ead9344d43d509f_cgraph">
+</map>
+</div>
+</p>
+
+</div>
+</div>
 <a class="anchor" id="file_acfe13f2a03e5b5ad1df54c857db107aa"></a>
 <div class="memitem">
 <div class="memproto">
@@ -192,7 +236,6 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="differential__evolution_8h_acfe13f2a03e5b5ad1df54c857db107aa_cgraph.png" border="0" usemap="#differential__evolution_8h_acfe13f2a03e5b5ad1df54c857db107aa_cgraph" alt=""/></div>
 <map name="differential__evolution_8h_acfe13f2a03e5b5ad1df54c857db107aa_cgraph" id="differential__evolution_8h_acfe13f2a03e5b5ad1df54c857db107aa_cgraph">
-<area shape="rect" id="node2" href="classpallas_1_1_differential_evolution.html#af5f05e7a781b030afc77b80a23bf6541" title="Minimizes the specified gradient problem. " alt="" coords="150,5,332,44"/>
 </map>
 </div>
 </p>
@@ -202,7 +245,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Apr 30 2016 15:59:05 for Pallas Solver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue May 3 2016 00:26:05 for Pallas Solver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

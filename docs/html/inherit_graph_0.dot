@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="pallas::Basinhopping",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classpallas_1_1_basinhopping.html",tooltip="Minimizes an objective function by sequentially hopping between minima in the objective&#39;s energy land..."];
+}

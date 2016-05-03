@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['options',['Options',['../structpallas_1_1_cooling_schedule_1_1_options.html',1,'pallas::CoolingSchedule']]],
-  ['options',['Options',['../structpallas_1_1_differential_evolution_1_1_options.html',1,'pallas::DifferentialEvolution']]],
-  ['options',['Options',['../structpallas_1_1_basinhopping_1_1_options.html',1,'pallas::Basinhopping']]],
-  ['options',['Options',['../structpallas_1_1_brute_1_1_options.html',1,'pallas::Brute']]],
-  ['options',['Options',['../structpallas_1_1_simulated_annealing_1_1_options.html',1,'pallas::SimulatedAnnealing']]]
+  ['metropolis',['Metropolis',['../classpallas_1_1internal_1_1_metropolis.html',1,'pallas::internal']]],
+  ['mutatebest1',['MutateBest1',['../classpallas_1_1internal_1_1_mutate_best1.html',1,'pallas::internal']]],
+  ['mutatebest2',['MutateBest2',['../classpallas_1_1internal_1_1_mutate_best2.html',1,'pallas::internal']]],
+  ['mutaterand1',['MutateRand1',['../classpallas_1_1internal_1_1_mutate_rand1.html',1,'pallas::internal']]],
+  ['mutaterand2',['MutateRand2',['../classpallas_1_1internal_1_1_mutate_rand2.html',1,'pallas::internal']]],
+  ['mutaterandtobest1',['MutateRandToBest1',['../classpallas_1_1internal_1_1_mutate_rand_to_best1.html',1,'pallas::internal']]],
+  ['mutationstrategy',['MutationStrategy',['../classpallas_1_1internal_1_1_mutation_strategy.html',1,'pallas::internal']]]
 ];

@@ -104,7 +104,6 @@ Collaboration diagram for pallas::Basinhopping::Options:</div>
 <div class="dyncontent">
 <div class="center"><img src="structpallas_1_1_basinhopping_1_1_options__coll__graph.png" border="0" usemap="#pallas_1_1_basinhopping_1_1_options_coll__map" alt="Collaboration graph"/></div>
 <map name="pallas_1_1_basinhopping_1_1_options_coll__map" id="pallas_1_1_basinhopping_1_1_options_coll__map">
-<area shape="rect" id="node2" href="classpallas_1_1scoped__ptr.html" title="pallas::scoped_ptr\l\&lt; pallas::StepFunction \&gt;" alt="" coords="5,5,170,44"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -131,6 +130,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ae8de37fe47a6dc59d863783ce1ea1155"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefe92640af48edb0fe25f97de86b3be6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpallas_1_1_basinhopping_1_1_options.html#aefe92640af48edb0fe25f97de86b3be6">is_silent</a></td></tr>
 <tr class="separator:aefe92640af48edb0fe25f97de86b3be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae66546e0c6466f049c2ae6488794903a"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpallas_1_1_basinhopping_1_1_options.html#ae66546e0c6466f049c2ae6488794903a">history_save_frequency</a></td></tr>
+<tr class="separator:ae66546e0c6466f049c2ae6488794903a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Configurable options for modifying the default behaviour of the basinhopping algorithm. </p>
@@ -196,6 +197,19 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="ae66546e0c6466f049c2ae6488794903a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int pallas::Basinhopping::Options::history_save_frequency</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Frequency to save the state of the system. Values will be appended to a <code>HistorySeries</code> contained in the optimization summary. Default is 0. If 0 then history is not saved. Otherwise, the state of the system will be appended to the series when <code>i % history_save_frequency == 0</code>. If there are a large number of iterations this can lead to a lot of data being stored in memory. </p>
+
+</div>
+</div>
 <a class="anchor" id="aefe92640af48edb0fe25f97de86b3be6"></a>
 <div class="memitem">
 <div class="memproto">
@@ -280,7 +294,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Apr 30 2016 15:59:05 for Pallas Solver by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue May 3 2016 00:26:05 for Pallas Solver by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

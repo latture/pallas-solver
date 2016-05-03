@@ -1,5 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classpallas_1_1_step_function.html" title="Interface to produce randomized candidate solutions. " alt="" coords="5,31,147,56"/>
-<area shape="rect" id="node2" href="$classpallas_1_1_bounded_step_function.html" title="A new candidate solution is generated between upper and lower bounds. Each degree of freedom in the c..." alt="" coords="195,5,391,31"/>
-<area shape="rect" id="node3" href="$classpallas_1_1_default_step_function.html" title="Simple candidate generator that modifies the input by a random amount between +/&#45; step_size..." alt="" coords="201,55,385,80"/>
-</map>
