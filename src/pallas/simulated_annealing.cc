@@ -181,6 +181,8 @@ namespace pallas {
 
         if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
             prepare_final_summary_(global_summary, local_summary);
+            if (internal::IsSolutionUsable(global_summary))
+                x = global_minimum_state_.x;
             return;
         }
 
