@@ -308,11 +308,11 @@ namespace pallas {
         internal::State global_minimum_state_;/**The best solution found during any stage of the optimization. It is this value that is returned when minimization concludes.*/
 
         unsigned int num_iterations_;/**<The number of local optimization iterations the global optimizer has performed.*/
-        unsigned int num_stagnant_iterations_;/**<The number of iterations which has elapsed without finding a new global minimum.*/
+        unsigned int num_stagnant_iterations_;/**<The number of iterations that have elapsed without finding a new global minimum.*/
     };
 
     /**
-     * @brief Helper function which avoids going through the interface of the pallas::SimulatedAnnealing class.
+     * @brief Helper function that avoids going through the interface of the pallas::SimulatedAnnealing class.
      * @details The specified options are used to setup a simulated instance which
      * is then used to minimize the GradientProblem. The optimal solution is stored
      * in `parameters` and a summary of the global optimization can be found in `summary`.
