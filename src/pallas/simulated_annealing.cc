@@ -151,12 +151,16 @@ namespace pallas {
         current_state_ = internal::State(num_parameters);
         current_state_.x = x;
 
+        GradientLocalMinimizer::Summary local_summary;
+
         t1 = WallTimeInSeconds();
         if (!Evaluate(problem, current_state_.x, &current_state_, &global_summary->message)) {
             global_summary->termination_type = TerminationType::FAILURE;
             global_summary->message = "Initial cost and jacobian evaluation failed. "
                                               "More details: " + global_summary->message;
             LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+            prepare_final_summary_(global_summary, local_summary);
+            return;
         }
         ++num_iterations_;
         global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
@@ -175,10 +179,9 @@ namespace pallas {
         candidate_state_ = current_state_;
         global_minimum_state_ = current_state_;
 
-        GradientLocalMinimizer::Summary local_summary;
-
         if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
             prepare_final_summary_(global_summary, local_summary);
+            return;
         }
 
         // main loop
@@ -194,6 +197,8 @@ namespace pallas {
                     global_summary->message = "Cost evaluation of candidate state failed "
                                                       "More details: " + global_summary->message;
                     LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+                    prepare_final_summary_(global_summary, local_summary);
+                    return;
                 }
                 global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
 
