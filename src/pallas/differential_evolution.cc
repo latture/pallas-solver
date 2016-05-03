@@ -134,6 +134,8 @@ namespace pallas {
 
         VectorRef x(parameters, num_parameters_);
 
+        GradientLocalMinimizer::Summary local_summary;
+
         global_summary->mutation_strategy = options.mutation_strategy;
         global_summary->crossover_strategy = options.crossover_strategy;
 
@@ -146,6 +148,8 @@ namespace pallas {
                 global_summary->message = "Initial cost evaluation failed. "
                                                   "More details: " + global_summary->message;
                 LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+                prepare_final_summary_(global_summary, local_summary);
+                return;
             }
         }
         global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
@@ -159,6 +163,9 @@ namespace pallas {
 
         if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
             prepare_final_summary_(global_summary, local_summary);
+            if (internal::IsSolutionUsable(global_summary)||internal::IsSolutionUsable(local_summary))
+                x = global_minimum_state_.x;
+            return;
         }
 
         // move fittest individual to first slot
@@ -183,6 +190,8 @@ namespace pallas {
                     global_summary->message = "Cost evaluation failed. "
                                                       "More details: " + global_summary->message;
                     LOG_IF(WARNING, is_not_silent) << "Terminating: " << global_summary->message;
+                    prepare_final_summary_(global_summary, local_summary);
+                    return;
                 }
                 global_summary->cost_evaluation_time_in_seconds += WallTimeInSeconds() - t1;
 
