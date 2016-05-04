@@ -9,3 +9,6 @@ target_link_libraries(brute_rosenbrock pallas)
 
 add_executable(differential_evolution_rosenbrock differential_evolution_rosenbrock.cc)
 target_link_libraries(differential_evolution_rosenbrock pallas)
+
+add_executable(history_output_example history_output_example.cc)
+target_link_libraries(history_output_example pallas)
