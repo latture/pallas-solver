@@ -139,6 +139,14 @@ namespace pallas {
         global_summary->mutation_strategy = options.mutation_strategy;
         global_summary->crossover_strategy = options.crossover_strategy;
 
+        std::vector<Vector> scaled_population;
+        if (options.history_save_frequency > 0) {
+            scaled_population.resize(population_size_);
+            for (unsigned int i = 0; i < population_size_; ++i) {
+                scaled_population[i].resize(num_parameters_);
+            }
+        }
+
         Vector scaled_trial(num_parameters_);
         t1 = WallTimeInSeconds();
         for(unsigned int i = 0; i < population_energies_.size(); ++i) {
@@ -159,8 +167,11 @@ namespace pallas {
         global_minimum_state_.cost = population_energies_.minCoeff(&min_idx);
         global_minimum_state_.x = population_[min_idx];
 
-        if (options.history_save_frequency > 0)
-            global_summary->history.push_back(HistoryOutput(num_iterations_, population_, global_minimum_state_.cost, global_minimum_state_.x));
+        if (options.history_save_frequency > 0) {
+            for (size_t i = 0; i < population_.size(); ++i)
+                scale_parameters_(population_[i], scaled_population[i]);
+            global_summary->history.push_back(HistoryOutput(num_iterations_, scaled_population, global_minimum_state_.cost, global_minimum_state_.x));
+        }
 
         if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
             prepare_final_summary_(global_summary, local_summary);
@@ -215,8 +226,11 @@ namespace pallas {
 
             update_std_dev_();
 
-            if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency == 0)
-                global_summary->history.push_back(HistoryOutput(num_iterations_, population_, global_minimum_state_.cost, global_minimum_state_.x));
+            if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency == 0) {
+                for (size_t i = 0; i < population_.size(); ++i)
+                    scale_parameters_(population_[i], scaled_population[i]);
+                global_summary->history.push_back(HistoryOutput(num_iterations_, scaled_population, global_minimum_state_.cost, global_minimum_state_.x));
+            }
 
             if(check_for_termination_(options, &global_summary->message, &global_summary->termination_type)) {
                 if (options.polish_output) {
@@ -242,8 +256,11 @@ namespace pallas {
                 if (internal::IsSolutionUsable(global_summary)||internal::IsSolutionUsable(local_summary))
                     x = global_minimum_state_.x;
 
-                if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency != 0)
-                    global_summary->history.push_back(HistoryOutput(num_iterations_, population_, global_minimum_state_.cost, global_minimum_state_.x));
+                if (options.history_save_frequency > 0 && num_iterations_ % options.history_save_frequency != 0) {
+                    for (size_t i = 0; i < population_.size(); ++i)
+                        scale_parameters_(population_[i], scaled_population[i]);
+                    global_summary->history.push_back(HistoryOutput(num_iterations_, scaled_population, global_minimum_state_.cost, global_minimum_state_.x));
+                }
                 global_summary->total_time_in_seconds = WallTimeInSeconds() - start_time;
                 return;
             }
