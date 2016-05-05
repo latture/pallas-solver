@@ -45,11 +45,19 @@ public:
                           double* gradient) const {
         const double x = parameters[0];
         const double y = parameters[1];
+        cost[0] = 3.0 * pow(1.0 - x, 2) * exp(- pow(x, 2) - pow(y + 1, 2))
+                  - 10.0 * (x/5.0 - pow(x, 3) - pow(y, 5)) * exp(-pow(x, 2) - pow(y, 2))
+                  - 1.0/3.0 * exp(-pow(x+1, 2) - pow(y, 2));
 
-        cost[0] = 3.0 * pow(1.0 - x, 2) * std::exp(- pow(x, 2) - pow(y + 1, 2)) - 10.0 * (x/5.0 - pow(x, 3) - pow(y, 5)) * std::exp(-pow(x, 2) - pow(y, 2)) - 1.0/3.0 * std::exp(-pow(x+1, 2) - pow(y, 2));
         if (gradient != NULL) {
-            gradient[0] = -6.0 * std::exp(-std::pow(x, 2) - std::pow(1.0 + y, 2)) * (1.0 - x) - 6.0 * std::exp(-std::pow(x, 2) - std::pow(1.0 + y, 2)) * std::pow(1.0 - x, 2) * x + 2.0/3.0 * std::exp(-std::pow(1.0 + x, 2) - std::pow(y, 2)) * (1.0 + x) - 10 * std::exp(-std::pow(x, 2) - std::pow(y, 2)) * (1.0/5.0 - 3.0 * std::pow(x, 2)) + 20.0 * std::exp(-std::pow(x, 2) - std::pow(y, 2)) * x * (x/5.0 - std::pow(x, 3) - std::pow(y, 5));
-            gradient[1] = 2.0/3.0 * exp(-pow(1.0 + x, 2) - pow(y, 2)) * y + 50.0 * exp(-pow(x, 2) - pow(y, 2)) * pow(y, 4) - 6.0 * exp(-pow(x, 2) - pow(1.0 + y, 2)) * pow(1.0 - x, 2) * (1.0 + y) + 20.0 * exp(-pow(x, 2) - pow(y, 2)) * y * (x/5.0 - pow(x, 3) - pow(y, 5));
+            gradient[0] = -6.0 * exp(-pow(x, 2) - pow(1.0 + y, 2)) * (1.0 - x)
+                          - 6.0 * exp(-pow(x, 2) - pow(1.0 + y, 2)) * pow(1.0 - x, 2) * x
+                          + 2.0/3.0 * exp(-pow(1.0 + x, 2) - pow(y, 2)) * (1.0 + x)
+                          - 10 * exp(-pow(x, 2) - pow(y, 2)) * (1.0/5.0 - 3.0 * pow(x, 2))
+                          + 20.0 * exp(-pow(x, 2) - pow(y, 2)) * x * (x/5.0 - pow(x, 3) - pow(y, 5));
+            gradient[1] = 2.0/3.0 * exp(-pow(1.0 + x, 2) - pow(y, 2)) * y + 50.0 * exp(-pow(x, 2) - pow(y, 2)) * pow(y, 4)
+                          - 6.0 * exp(-pow(x, 2) - pow(1.0 + y, 2)) * pow(1.0 - x, 2) * (1.0 + y)
+                          + 20.0 * exp(-pow(x, 2) - pow(y, 2)) * y * (x/5.0 - pow(x, 3) - pow(y, 5));
         }
         return true;
     }
