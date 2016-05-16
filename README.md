@@ -237,7 +237,7 @@ pallas::Solve(options, problem, parameters, &summary)
 
 Description of Algorithms
 -------------------------
-![Schwefel](assets/Schwefel.png)
+![Schwefel](assets/schwefel.png)
 
 To illustrate each algorithm we'll use Schwefel's function (shown above) defined as:
 
