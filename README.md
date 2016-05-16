@@ -261,6 +261,8 @@ bh.Solve(options, problem, parameters, &summary);
 pallas::Solve(options, problem, parameters, &summary)
 ```
 
+If you want more information take a look at the `examples` folder. There's a full example using each algorithm. For even more information and a list of the available options for each algorithm, see the reference documentation at: http://latture.github.io/pallas-solver
+
 Contributor(s)
 ------------
  * Ryan Latture
