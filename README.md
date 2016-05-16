@@ -42,7 +42,7 @@ Example
 The Rosenbrock function (shown below) is a commonly used benchmarking function for optimization algorithms.
 The global minimum is in the middle of a narrow valley at `f(x, y) = 0` when `x = y = 1`.
 Finding the valley is fairly easy; however, finding the global minimum is quite a bit harder...
-![Rosenbrock](assets/Rosenbrock.png)
+![Rosenbrock](assets/rosenbrock.png)
 
 ```cpp
 #include "glog/logging.h"
@@ -234,6 +234,72 @@ bh.Solve(options, problem, parameters, &summary);
 // bypass the creation of the optimizer
 pallas::Solve(options, problem, parameters, &summary)
 ```
+
+Description of Algorithms
+-------------------------
+![Schwefel](assets/Schwefel.png)
+
+To illustrate each algorithm we'll use Schwefel's function (shown above) defined as:
+
+```cpp
+class Schwefel : public pallas::GradientCostFunction {
+public:
+    virtual ~Schwefel() {}
+
+    virtual bool Evaluate(const double* parameters,
+                          double* cost,
+                          double* gradient) const {
+
+        double c = 0.0;
+        for (auto i = 0; i < NumParameters(); ++i)
+            c -= parameters[i] * std::sin(std::sqrt(abs(parameters[i])));
+        cost[0] = 418.9829 * NumParameters() + c;
+
+        if (gradient != NULL) {
+            double g = 0.0;
+            for (int i = 0; i < NumParameters(); ++i)
+                gradient[i] = parameters[i] * cos(sqrt(abs(parameters[i]))) / (2.0 * pow(abs(parameters[i]), 1.5));
+        }
+        return true;
+    }
+
+    virtual int NumParameters() const { return 2; }
+};
+```
+
+Full examples of each algorithm used to optimize Rosenbrock's function can be found in the `examples` folder.
+
+### Brute ###
+
+![Brute](assets/brute.gif)
+
+Brute force is a simple N-dimensional, grid-based search through the parameter space.
+To use, specify the objective function and the parameter ranges via:
+
+```cpp
+std::vector<pallas::Brute::ParameterRange> ranges = {pallas::Brute::ParameterRange(-500.0, 500.0, 50),
+                                                     pallas::Brute::ParameterRange(-500.0, 500.0, 50)}
+```
+
+This will divide the `ith` parameter into 7 equally spaced search points. The objective will be evaluated at each parameter combination. While not an efficient optimization strategy, brute force is often used as a coarse-grained search of the parameter space in order to identify areas of interest that can be further explored with other, more efficient, algorithms. 
+
+### Simulated Annealing ###
+
+![SimulatedAnnealing](assets/simulated_annealing.gif)
+
+Simulated annealing is a global optimization algorithm that doesn't need derivative information. Randomized steps are generated about the current solution vector forming a candidate solution. Then the current solution chooses whether or not accept (and thus to move to) the candidate solution based on the cost associated with the candidate solution. If it is lower than the current cost, the candidate solution is accepted. If it is higher, the candidate isn't simply thrown out. The current solution moves to a worse candidate solution with a given probability in hopes that accepting worse solutions will allow the algorithm to surmount local optima and find the global minimum. The likelihood of accepting a worse candidate solution is controlled by the system temperature: higher temperatures mean the worse candidate is more likely to be accepted. As optimization progresses, the temperature is slowly decreased (i.e. the system simulates an annealing process) and the likelihood of accepting worse candidate solutions is decreased later in the optimization. The method of cooling the system is controlled via a `CoolingSchedule`. Pallas provides three schedules: `FastCooling`, `CauchyCooling` and `BoltzmannCooling`. For information on how these control temperature see `pallas/cooling_schedule.h`.
+
+### Basinhopping ###
+
+![Basinhopping](assets/basinhopping.gif)
+
+Basinhopping is very similar to simulated annealing with one additional step: after each randomized step the candidate solution is fed into a local optimizer in order to move the candidate solution to the bottom of the current basin. This locally optimized candidate is then compared to the current solution in order to decide whether to accept the candidate. This allows the optimizer to traverse the energy landscape in a reduced subset of space where only local optima are present. In effect, much fewer total iterations are needed compared to simulated annealing, but this comes a higher cost per iteration because instead of simply taking a randomized step, a local optimization must be performed during each iteration (Notice the iteration count compared to simulated annealing). In general, when using `Basinhopping` you will need at least as many iterations as there are local optima.
+
+### Differential Evolution ###
+
+![DifferentialEvolution](assets/differential_evolution.gif)
+
+Differential evolution is different than the previous algorithms. Instead of maintaining a single current solution, it evolves a population of candidate solutions through a series of generations in order to find the global optimum. Children of the current population are created using crossover and mutation strategies. Crossover selects 1 or more individuals for reproduction then generates a candidate solution vector that undergoes mutation (with some probability) and is placed in the next generation's population. Crossover and mutation strategies are selected using the `DifferentialEvolution::Options` struct.
 
 Contributor(s)
 ------------
