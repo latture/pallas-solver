@@ -281,7 +281,7 @@ std::vector<pallas::Brute::ParameterRange> ranges = {pallas::Brute::ParameterRan
                                                      pallas::Brute::ParameterRange(-500.0, 500.0, 50)}
 ```
 
-This will divide the `ith` parameter into 7 equally spaced search points. The objective will be evaluated at each parameter combination. While not an efficient optimization strategy, brute force is often used as a coarse-grained search of the parameter space in order to identify areas of interest that can be further explored with other, more efficient, algorithms. 
+This will divide the `ith` parameter into 50 equally spaced search points. The objective will be evaluated at each parameter combination. While not an efficient optimization strategy, brute force is often used as a coarse-grained search of the parameter space in order to identify areas of interest that can be further explored with other, more efficient, algorithms. 
 
 ### Simulated Annealing ###
 
