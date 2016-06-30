@@ -29,6 +29,8 @@
 #include "glog/logging.h"
 #include "rapidjson/stringbuffer.h"
 
+using namespace std;
+
 // Each solver is defined in its own header file.
 // include the solver you wish you use:
 #include "pallas/differential_evolution.h"
